@@ -270,8 +270,6 @@ def schedule():
 
     return schedule_list
 
-
-@app.route('/univ', methods=['GET'])
 def university():
     df = pd.read_excel('excel/23.1 academic calendar.xlsx')
     NUM_ROWS = df.shape[0]
@@ -288,8 +286,6 @@ def university():
 
     return 'testing'
 
-
-@app.route('/lecture', methods=['GET'])
 def lecture():
     df = pd.read_excel('excel/23.1 univ lecture list.xlsx')
     NUM_ROWS = df.shape[0]
