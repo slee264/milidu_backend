@@ -12,6 +12,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'da
 # 임시!!!!!
 app.secret_key = secret_key
 
+
 db.init_app(app)
 bcrypt.init_app(app)
 
