@@ -288,6 +288,21 @@ def university():
 
     return 'testing'
 
+@app.route('/get_unischedule', methods=['POST'])
+def get_uni():
+    name = request.get_json()['name']
+    
+    if len(name) == 0:
+        return UniSchedule.query.all()
+    
+    school = UniSchedule.query.filter(UniSchedule.school_name == name).first()
+    
+    if school:
+        return school
+    
+    else:
+        schools = UniSchedule.query.filter(UniSchedule.school_name[0] == name[0]).all()
+        return schools
 
 @app.route('/lecture', methods=['GET'])
 def lecture():
@@ -308,6 +323,19 @@ def lecture():
     db.session.close()
     return 'lectures!'
 
+@app.route('/get_lecture', methods=['POST'])
+def get_lecture():
+    name = request.get_json()['name']
+    
+    if len(name) == 0:
+        return UniLecture.query.all()
+    
+    lectures = UniLecture.query.filter(UniLecture.univ == name).all()
+    
+    if lectures:
+        return lectures
+        
+    return "Lecture not found"
 
 @login_manager.user_loader
 def load_user(user_id):
