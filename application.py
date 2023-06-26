@@ -21,7 +21,6 @@ login_manager.init_app(app)
 def get_new_lists():
     BODY = 1
     ITEMS = 0
-    
     # 기술사 = 01, 기능장 = 02, 기사 = 03, 기능사 = 04
     SERIESCD = ['01', '02', '03', '04']
     # 기술사 = 10, 기능장 = 20, 기사 = 30, 기능사 = 40
@@ -346,7 +345,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    print(current_user.is_authenticated)
+    print(current_user.sepis_authenticated)
     return "logged out"
 
 
