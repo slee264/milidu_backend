@@ -5,13 +5,12 @@ from models import bcrypt, db, Cert, CertStats, UniSchedule, UniLecture, User
 import xml.etree.ElementTree as ET
 import pandas as pd
 from flask_login import LoginManager, login_required, login_user, current_user, logout_user
-from flask_bcrypt import Bcrypt
-
+from ignore import secret_key
 app = Flask("app")
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
 # 임시!!!!!
-app.secret_key = '67ebcaf9ccf534972385d9a118dcc25867978f5fc2ff14109caaa631bfa882cd'
+app.secret_key = secret_key
 
 db.init_app(app)
 bcrypt.init_app(app)
