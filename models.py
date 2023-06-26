@@ -168,7 +168,7 @@ class UniLecture(db.Model):
         return f'<UniLecture univ_name = {self.univ}, lecture = {self.lecture}, professor = {self.prof}, credit = {self.credit}, reg_start = {self.reg_start}>'
 
 class User(UserMixin, db.Model):
-    
+
     def __init__(self, name, username, pw):
         self.name = name
         self.username = username
@@ -183,25 +183,112 @@ class User(UserMixin, db.Model):
             db.session.close()
             return user
         return None
-    
+
     def authenticate(username, password):
         user = User.query.filter(User.username == username).first()
         if bcrypt.check_password_hash(user.password, password):
             print("user authenticated")
             return user
         return None
-    
+
     def get(user_id):
         user = User.query.filter(User.id == user_id).first()
         return user
-    
+
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    
+
     #유저 이름
     name = db.Column(db.String(20), nullable = False)
+
+    #유저 ID
+    username = db.Column(db.String(20), nullable = False)
+
+    #유저 비밀번호
+    password = db.Column(db.String(20), nullable = False)
+
+    def __repr__(self):
+        return f'<User name = {self.name}, username = {self.username}>'
+    
+class CertReview(db.Model):
+    def __init__(self, certname, certid, username, content, time_taken, like_amount, level, recommend_book, test_attempt):
+        self.certname = certname
+        self.certid = certid
+        self.username = username
+        self.content = content
+        self.time_taken = time_taken
+        self.like_amount = like_amount
+        self.level = level
+        self.recommend_book = recommend_book
+        self.test_attempt = test_attempt
+        
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    
+    #자격증 이름
+    certname = db.Column(db.String(20), nullable = False)
+    
+    #자격증 코드
+    certid = db.Column(db.Integer, db.ForeignKey('cert.id'), nullable = False)
     
     #유저 ID
     username = db.Column(db.String(20), nullable = False)
     
-    #유저 비밀번호
-    password = db.Column(db.String(20), nullable = False)
+    #리뷰 내용
+    content = db.Column(db.Text, nullable = True)
+    
+    #소요 시간
+    time_taken = db.Column(db.String(20), nullable = False)
+    
+    #좋아요 수
+    like_amount = db.Column(db.Integer, nullable = True)
+    
+    #난이도
+    level = db.Column(db.Integer, nullable = False)
+    
+    #추천 도서
+    recommend_book = db.Column(db.String(50), nullable = True)
+    
+    #시도 횟수
+    test_attempt = db.Column(db.Integer, nullable = False)
+    
+    def __repr__(self):
+        return f'<CertReview certname = {self.certname}, username = {self.username}, content = {self.content}, time_taken = {self.time_taken}, level = {self.level}, test_attempt = {self.test_attempt}>'
+    
+class LectureReview(db.Model):
+    def __init__(self, university, lecturename, lectureid, username, content, like_amount, load, grade):
+        self.university = university
+        self.lecturename = lecturename
+        self.lectureid = lectureid
+        self.username = username
+        self.content = content
+        self.like_amount = like_amount
+        self.load = load
+        self.grade = grade
+
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    
+    #대학교 이름
+    university = db.Column(db.String(20), nullable = False)
+    
+    #강좌 이름
+    lecturename = db.Column(db.String(20), nullable = False)
+    
+    #강좌 ID
+    lectureid = db.Column(db.Integer, db.ForeignKey('uni_lecture.id'), nullable = False)
+    
+    #유저 ID
+    username = db.Column(db.String(20), nullable = False)
+    
+    #리뷰 내용
+    content = db.Column(db.Text, nullable = True)
+    
+    #좋아요 수
+    like_amount = db.Column(db.Integer, nullable = True)
+    
+    #과제
+    load = db.Column(db.String(20), nullable = False)
+    
+    #학점
+    grade = db.Column(db.String(10), nullable = False)
+    
+    def __repr__(self):
+        return f'<LectureReview university = {self.university}, lecturename = {self.lecturename}, username = {self.username}, content = {self.content}, load = {self.load}, grade = {self.grade}>'
