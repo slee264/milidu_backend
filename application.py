@@ -5,12 +5,12 @@ from models import bcrypt, db, Cert, CertStats, UniSchedule, UniLecture, User
 import xml.etree.ElementTree as ET
 import pandas as pd
 from flask_login import LoginManager, login_required, login_user, current_user, logout_user
-from ignore import secret_key, db_serviceKey
+from config import SECRET_KEY, DB_SERVICE_KEY
 app = Flask("app")
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
 # 임시!!!!!
-app.secret_key = secret_key
+app.secret_key = SECRET_KEY
 
 db.init_app(app)
 bcrypt.init_app(app)
@@ -30,7 +30,7 @@ def get_new_lists():
         cert_dict = {}
         for cd in seriesCD:
             # cert_xml_url = 'http://openapi.q-net.or.kr/api/service/rest/InquiryQualInfo/getList'
-            # cert_xml_params ={'serviceKey' : db_serviceKey, 'seriesCd' : cd }
+            # cert_xml_params ={'serviceKey' : DB_SERVICE_KEY, 'seriesCd' : cd }
 
             # cert_xml = requests.get(cert_xml_url, params=cert_xml_params)
 
@@ -69,7 +69,7 @@ def get_new_lists():
                 cert_dict[item.find("jmNm").text] = val + [st]
 
         # related_major_url = 'http://openapi.q-net.or.kr/api/service/rest/InquiryMjrQualSVC/getList'
-        # params ={'serviceKey' : db_serviceKey, 'grdCd' : '10', 'baseYY' : '2020', 'pageNo' : '1', 'numOfRows' : '95' }
+        # params ={'serviceKey' : DB_SERVICE_KEY, 'grdCd' : '10', 'baseYY' : '2020', 'pageNo' : '1', 'numOfRows' : '95' }
         # related_major_xml = requests.get(related_major_url, params=params)
         # f = open("related_major.xml" , "wb")
         # f.write(related_major_xml.content)
@@ -108,7 +108,7 @@ def get_new_lists():
         for grcd in GRADECD:
             for yrcd in YEARCD:
                 stats_xml_url = 'http://openapi.q-net.or.kr/api/service/rest/InquiryQualPassRateSVC/getList'
-                stats_xml_params ={'serviceKey' : db_serviceKey, 'grdCd' : grcd, 'baseYY' : yrcd, 'pageNo' : '1', 'numOfRows' : '3000' }
+                stats_xml_params ={'serviceKey' : DB_SERVICE_KEY, 'grdCd' : grcd, 'baseYY' : yrcd, 'pageNo' : '1', 'numOfRows' : '3000' }
                 stats_xml = requests.get(stats_xml_url, params=stats_xml_params)
                 stats_xml_root = ET.fromstring(stats_xml.content)
                 for item in stats_xml_root[BODY][ITEMS]:
@@ -200,7 +200,7 @@ def schedule():
     BODY = 1
     ITEMS = 0
     schedule_xml_url = 'http://openapi.q-net.or.kr/api/service/rest/InquiryTestInformationNTQSVC/getJMList'
-    schedule_xml_params ={'serviceKey' : db_serviceKey, 'jmCd' : cert_code}
+    schedule_xml_params ={'serviceKey' : DB_SERVICE_KEY, 'jmCd' : cert_code}
     schedule_xml = requests.get(schedule_xml_url, params=schedule_xml_params)
     schedule_xml_root = ET.fromstring(schedule_xml.content)
     schedule_list = []
