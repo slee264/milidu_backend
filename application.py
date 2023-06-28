@@ -369,5 +369,17 @@ def register():
 
     return "register test"
 
+@app.route('/certreview', methods=['POST'])
+def certreview():
+    # certid = request.get_json()['certid']
+    # username = request.get_json()['username']
+    # content = request.get_json()['certid']
+    # time_taken = request.get_json()['certid']
+    # level = request.get_json()['certid']
+    # recommend_book = request.get_json()['certid']
+    # test_attempt = request.get_json()['certid']
+    
+    # like_amount
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='80')

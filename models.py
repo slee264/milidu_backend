@@ -210,13 +210,13 @@ class User(UserMixin, db.Model):
         return f'<User name = {self.name}, username = {self.username}>'
     
 class CertReview(db.Model):
-    def __init__(self, certname, certid, username, content, time_taken, like_amount, level, recommend_book, test_attempt):
+    def __init__(self, certname, certid, username, content, time_taken, level, recommend_book, test_attempt):
         self.certname = certname
         self.certid = certid
         self.username = username
         self.content = content
         self.time_taken = time_taken
-        self.like_amount = like_amount
+        self.like_amount = 0
         self.level = level
         self.recommend_book = recommend_book
         self.test_attempt = test_attempt
@@ -260,7 +260,7 @@ class LectureReview(db.Model):
         self.lectureid = lectureid
         self.username = username
         self.content = content
-        self.like_amount = like_amount
+        self.like_amount = 0
         self.load = load
         self.grade = grade
 
