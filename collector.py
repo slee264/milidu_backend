@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 
 from models import db, Cert, CertStats, UniSchedule, UniLecture
+from config import DB_SERVICE_KEY
 
 def get_new_lists():
     BODY = 1

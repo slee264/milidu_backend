@@ -210,48 +210,42 @@ class User(UserMixin, db.Model):
         return f'<User name = {self.name}, username = {self.username}>'
     
 class CertReview(db.Model):
-    def __init__(self, certname, certid, username, content, time_taken, level, recommend_book, test_attempt):
-        self.certname = certname
-        self.certid = certid
+    def __init__(self, cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes=0):
+        
+        self.cert_name = cert_name
+        self.cert_id = cert_id
         self.username = username
-        self.content = content
         self.time_taken = time_taken
-        self.like_amount = 0
-        self.level = level
+        self.difficulty = difficulty
         self.recommend_book = recommend_book
-        self.test_attempt = test_attempt
+        self.num_attempts = num_attempts
+        self.num_likes = num_likes
+        self.content = content
         
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    
-    #자격증 이름
-    certname = db.Column(db.String(20), nullable = False)
-    
-    #자격증 코드
-    certid = db.Column(db.Integer, db.ForeignKey('cert.id'), nullable = False)
-    
-    #유저 ID
+    # 자격증 이름
+    cert_name = db.Column(db.String(20), nullable = False)
+    # 자격증 코드
+    cert_id = db.Column(db.Integer, db.ForeignKey('cert.id'), nullable = False)
+    # 유저 ID
     username = db.Column(db.String(20), nullable = False)
-    
-    #리뷰 내용
+    # 리뷰 내용
     content = db.Column(db.Text, nullable = True)
-    
     #소요 시간
     time_taken = db.Column(db.String(20), nullable = False)
-    
     #좋아요 수
-    like_amount = db.Column(db.Integer, nullable = True)
-    
+    num_likes = db.Column(db.Integer, nullable = True)
     #난이도
-    level = db.Column(db.Integer, nullable = False)
-    
+    difficulty = db.Column(db.Integer, nullable = False)
     #추천 도서
     recommend_book = db.Column(db.String(50), nullable = True)
-    
     #시도 횟수
-    test_attempt = db.Column(db.Integer, nullable = False)
+    num_attempts = db.Column(db.Integer, nullable = False)
     
     def __repr__(self):
-        return f'<CertReview certname = {self.certname}, username = {self.username}, content = {self.content}, time_taken = {self.time_taken}, level = {self.level}, test_attempt = {self.test_attempt}>'
+        return f'<CertReview cert_name = {self.cert_name}, username = {self.username},\
+ time_taken = {self.time_taken}, difficulty = {self.difficulty}, num_attempts = {self.num_attempts}, \
+ num_likes = {self.num_likes}, content = {self.content}>'
     
 class LectureReview(db.Model):
     def __init__(self, university, lecturename, lectureid, username, content, like_amount, load, grade):
