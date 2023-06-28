@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request
 import requests
-from models import bcrypt, db, Cert, CertStats, UniSchedule, UniLecture, User
+from models import bcrypt, db, Cert, CertStats, UniSchedule, UniLecture, User, CertReview
 import xml.etree.ElementTree as ET
 from flask_login import LoginManager, login_required, login_user, current_user, logout_user
 from config import SECRET_KEY, DB_SERVICE_KEY
@@ -19,7 +19,7 @@ login_manager.init_app(app)
 
 @app.route('/certs', methods=['GET'])
 def certs():
-    data = Cert.query.all()
+    data = Cert.getAllCerts()
     certlist = []
     for cert in data:
         val = {'name': cert.name, 'name_eng': cert.name_eng, 'code': cert.code, 'ministry': cert.ministry, 'host': cert.host, 'majors': cert.related_majors }
@@ -31,7 +31,7 @@ def stats():
     cert_code = request.args.get('cert_code', None)
     data = None
     if cert_code is None:
-        data = CertStats.query.all()
+        data = CertStats.getAllCertStats()
     else:
         if cert_code is not None:
             if len(cert_code) != 4:
@@ -39,8 +39,8 @@ def stats():
         for digit in cert_code:
             if not digit.isdigit():
                 return "Certification code not valid."
-        cert_id = Cert.query.filter(Cert.code == cert_code).first().id
-        data = CertStats.query.filter(CertStats.cert_id == cert_id).all()
+        cert_id = Cert.getCertByCode(cert_code).id
+        data = CertStats.getCertStatsByCertId(cert_id)
     statslist = []
     for stats in data:
         if stats.total_taken is not 0:
@@ -228,16 +228,41 @@ def register():
     return "register test"
 
 # 앞으로 이름 더 자세하게 지으세요.
-# @app.route('/certreview', methods=['POST'])
-# def certreview():
-#     certid = request.get_json()['certid']
-#     username = request.get_json()['username']
-#     time_taken = request.get_json()['time_taken']
-#     difficulty = request.get_json()['difficulty']
-#     recommend_book = request.get_json()['recommend_book']
-#     num_attempts = request.get_json()['num_attempts']
-#     content = request.get_json()['content']
+@app.route('/create_cert_review', methods=['POST'])
+def create_cert_review():
+    cert_name = requests.get_json()['certname']
+    cert_id = request.get_json()['cert_id']
+    username = request.get_json()['username']
+    time_taken = request.get_json()['time_taken']
+    difficulty = request.get_json()['difficulty']
+    recommend_book = request.get_json()['recommend_book']
+    num_attempts = request.get_json()['num_attempts']
+    content = request.get_json()['content']
+    num_likes = requests.get_json()['num_likes']
 
+    review = Review.create(cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes)
     
+    if review:
+        return (review, "리뷰를 성공적으로 작성했습니다.")
+    
+    return (None, "리뷰 작성 실패")
+
+@app.route('/get_review', methods=['POST'])
+def get_review():
+    # 글쓴이, 자격증명. 아무것도 적지 않을시 모든 리뷰 리턴.
+    category = requests.get_json()['category']
+    keyword = requests.get_json()['keyword']
+    
+    if category == '글쓴이':
+        reviews = CertReview.getReviewByUsername(keyword)
+        return reviews
+    
+    elif category == '자격증명':
+        reviews = CertReview.getReviewByCertName(keyword)
+        return reviews
+        
+    elif category is None:
+        return CertReview.getAllReviews()
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='80')

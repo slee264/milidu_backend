@@ -1,4 +1,5 @@
-import datetime
+from datetime import datetime
+from pytz import timezone
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -14,6 +15,12 @@ class Cert(db.Model):
         self.ministry = ministry
         self.host = host
         self.related_majors = related_majors
+        
+    def getAllCerts():
+        return Cert.query.all()
+    
+    def getCertByCode(cert_code):
+        return Cert.query.filter(Cert.code == cert_code).first()
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # 자격증명
@@ -44,6 +51,12 @@ class CertStats(db.Model):
         self.total_taken = total_taken
         self.total_passed = total_passed
         
+    def getAllCertStats():
+        return CertStats.query.all()
+    
+    def getCertStatsByCertId(cert_id):
+        return CertStats.query.filter(CertStats.cert_id == cert_id).all()
+    
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # 자격증 id
     cert_id = db.Column(db.Integer, db.ForeignKey('cert.id'), nullable=True)
@@ -61,7 +74,7 @@ class CertStats(db.Model):
     total_passed_m = db.Column(db.Integer, nullable=True)
     
     def __repr__(self):
-        return f'<CertStats cert_id = {self.cert_id}, CertNAME = {self.name}, CertYEAR = {self.year}>, total_taken = <self.total_taken>, total_passed = <self.total_take>'
+        return f'<CertStats cert_id = {self.cert_id}, CertNAME = {self.name}, CertYEAR = {self.year}, total_taken = {self.total_taken}, total_passed = {self.total_take}'
     
 class UniSchedule(db.Model):
     def __init__(self, school_name, reg_dates, sem_start, reg_change_dates, reg_cancel_dates, sem_end_date):
@@ -69,22 +82,22 @@ class UniSchedule(db.Model):
         
         reg_date_list = [date.strip().split('.') for date in reg_dates.split('~')]
 
-        self.reg_start = datetime.datetime(int(reg_date_list[0][0]), int(reg_date_list[0][1]), int(reg_date_list[0][2]))
-        self.reg_end = datetime.datetime(int(reg_date_list[1][0]), int(reg_date_list[1][1]), int(reg_date_list[1][2]))
+        self.reg_start = datetime(int(reg_date_list[0][0]), int(reg_date_list[0][1]), int(reg_date_list[0][2]))
+        self.reg_end = datetime(int(reg_date_list[1][0]), int(reg_date_list[1][1]), int(reg_date_list[1][2]))
         
         sem_start = sem_start.split('.')
-        self.sem_start = datetime.datetime(int(sem_start[0]), int(sem_start[1]), int(sem_start[2]))
+        self.sem_start = datetime(int(sem_start[0]), int(sem_start[1]), int(sem_start[2]))
         
         reg_change_list = [date.strip().split('.') for date in reg_change_dates.split('~')]
-        self.reg_change_start = datetime.datetime(int(reg_change_list[0][0]), int(reg_change_list[0][1]), int(reg_change_list[0][2]))
-        self.reg_change_end = datetime.datetime(int(reg_change_list[1][0]), int(reg_change_list[1][1]), int(reg_change_list[1][2]))
+        self.reg_change_start = datetime(int(reg_change_list[0][0]), int(reg_change_list[0][1]), int(reg_change_list[0][2]))
+        self.reg_change_end = datetime(int(reg_change_list[1][0]), int(reg_change_list[1][1]), int(reg_change_list[1][2]))
         
         reg_cancel_list = [date.strip().split('.') for date in reg_cancel_dates.split('~')]
-        self.reg_cancel_start = datetime.datetime(int(reg_cancel_list[0][0]), int(reg_cancel_list[0][1]), int(reg_cancel_list[0][2]))
-        self.reg_cancel_end = datetime.datetime(int(reg_cancel_list[1][0]), int(reg_cancel_list[1][1]), int(reg_cancel_list[1][2]))
+        self.reg_cancel_start = datetime(int(reg_cancel_list[0][0]), int(reg_cancel_list[0][1]), int(reg_cancel_list[0][2]))
+        self.reg_cancel_end = datetime(int(reg_cancel_list[1][0]), int(reg_cancel_list[1][1]), int(reg_cancel_list[1][2]))
     
         sem_end = sem_end_date.split('.')
-        self.sem_end = datetime.datetime(int(sem_end[0]), int(sem_end[1]), int(sem_end[2]))
+        self.sem_end = datetime(int(sem_end[0]), int(sem_end[1]), int(sem_end[2]))
         
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
         
@@ -129,7 +142,7 @@ class UniLecture(db.Model):
         self.costs = costs if type(costs) is int else costs.item()
         self.tuition = tuition if type(tuition) is int else tuition.item()
         reg_start = str(reg_start).strip()
-        self.reg_start = datetime.datetime(int(reg_start[:4]), int(reg_start[4:6]), int(reg_start[6:]))
+        self.reg_start = datetime(int(reg_start[:4]), int(reg_start[4:6]), int(reg_start[6:]))
         
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
 
@@ -221,6 +234,25 @@ class CertReview(db.Model):
         self.num_attempts = num_attempts
         self.num_likes = num_likes
         self.content = content
+        #년 월 일 시 분 초 Micro초 타임존
+        self.created_at = datetime.now(timezone('UTC')).astimezone(timezone('Asia/Seoul'))
+        
+    def create(cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes):
+        review = CertReview(cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes)
+        db.session.add(review)
+        db.session.commit()
+        db.session.close()
+        
+        return CertReview.query.filter(CertReview.id == review.id).first()
+    
+    def getAllReviews():
+        return CertReview.query.all()
+    
+    def getReviewByCertName(cert_name):
+        return CertReview.query.filter(CertReview.cert_name == cert_name).all()
+    
+    def getReviewByUsername(username):
+        return CertReview.query.filter(CertReview.username == username).all()
         
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     # 자격증 이름
@@ -241,6 +273,8 @@ class CertReview(db.Model):
     recommend_book = db.Column(db.String(50), nullable = True)
     #시도 횟수
     num_attempts = db.Column(db.Integer, nullable = False)
+    #리뷰 쓰여진 시간+날짜
+    created_at = db.Column(db.DateTime, nullable = False)
     
     def __repr__(self):
         return f'<CertReview cert_name = {self.cert_name}, username = {self.username},\
