@@ -153,6 +153,11 @@ class UniLecture(db.Model):
         reg_start = str(reg_start).strip()
         self.reg_start = datetime(int(reg_start[:4]), int(reg_start[4:6]), int(reg_start[6:]))
         
+    def getAllLectures():
+        return UniLecture.query.all()
+    
+    def getLectures(school_name):
+        return UniLecture.query.filter(UniLecture.univ == school_name).all()
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
 
     #학교명

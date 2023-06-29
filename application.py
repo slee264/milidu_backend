@@ -154,12 +154,12 @@ def get_uni():
 
 @app.route('/get_lecture', methods=['POST'])
 def get_lecture():
-    name = request.get_json()['name']
+    school_name = request.get_json()['name']
     
-    if len(name) == 0:
-        return UniLecture.query.all()
+    if len(school_name) == 0:
+        return UniLecture.getAllLectures()
     
-    lectures = UniLecture.query.filter(UniLecture.univ == name).all()
+    lectures = UniLecture.getLectures(school_name)
     
     if lectures:
         return lectures
@@ -240,7 +240,8 @@ def create_cert_review():
     content = request.get_json()['content']
     num_likes = requests.get_json()['num_likes']
 
-    review = Review.create(cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes)
+    review = CertReview.create(cert_name, cert_id, username, time_taken, difficulty, 
+                               recommend_book, num_attempts, content, num_likes)
     
     if review:
         return (review, "리뷰를 성공적으로 작성했습니다.")
