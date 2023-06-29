@@ -246,7 +246,7 @@ def create_cert_review():
     
     return (None, "리뷰 작성 실패")
 
-@app.route('/get_review', methods=['POST'])
+@app.route('/get_cert_review', methods=['POST'])
 def get_review():
     # 글쓴이, 자격증명. 아무것도 적지 않을시 모든 리뷰 리턴.
     category = requests.get_json()['category']
@@ -280,5 +280,21 @@ def create_lect_review():
         return (review, "리뷰를 성공적으로 작성했습니다.")
     return (None, "리뷰 작성 실패")
 
+@app.route('/get_lect_review', methods=['POST'])
+def get_lect_review():
+    # "글쓴이", "강좌명". 아무것도 적지 않을시 모든 리뷰 리턴.
+    category = requests.get_json()['category']
+    keyword = requests.get_json()['keyword']
+    
+    if category == '글쓴이':
+        reviews = LectureReview.getReviewByUsername(keyword)
+        return reviews
+    
+    elif category == '강좌명':
+        reviews = LectureReview.getReviewByCertName(keyword)
+        return reviews
+        
+    elif category is None:
+        return LectureReview.getAllReviews()
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='80')

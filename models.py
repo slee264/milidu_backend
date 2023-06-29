@@ -319,6 +319,15 @@ class LectureReview(db.Model):
         db.session.close()
         return LectureReview.query.filter(LectureReview.id == review.id).first()
     
+    def getAllReviews():
+        return LectureReview.query.all()
+    
+    def getReviewByCertName(lecture_name):
+        return LectureReview.query.filter(LectureReview.lecture_name == lecture_name).all()
+    
+    def getReviewByUsername(username):
+        return LectureReview.query.filter(LectureReview.username == username).all()
+    
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     #대학교 이름
     school_name = db.Column(db.String(20), nullable = False)
