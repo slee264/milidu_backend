@@ -138,18 +138,18 @@ def schedule():
 
 @app.route('/get_unischedule', methods=['POST'])
 def get_uni():
-    name = request.get_json()['name']
+    school_name = request.get_json()['name']
     
-    if len(name) == 0:
-        return UniSchedule.query.all()
+    if len(school_name) == 0:
+        return UniSchedule.getAllSchedules()
     
-    school = UniSchedule.query.filter(UniSchedule.school_name == name).first()
+    school = UniSchedule.getSchedule(school_name)
     
     if school:
         return school
     
     else:
-        schools = UniSchedule.query.filter(UniSchedule.school_name[0] == name[0]).all()
+        schools = UniSchedule.getSimilarSchedules(school_name)
         return schools
 
 @app.route('/get_lecture', methods=['POST'])

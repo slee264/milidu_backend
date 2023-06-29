@@ -99,6 +99,15 @@ class UniSchedule(db.Model):
         sem_end = sem_end_date.split('.')
         self.sem_end = datetime(int(sem_end[0]), int(sem_end[1]), int(sem_end[2]))
         
+    def getAllSchedules():
+        return UniSchedule.query.all()
+    
+    def getSchedule(school_name):
+        schedule = UniSchedule.query.filter(UniSchedule.school_name == school_name).first()
+        return schedule
+    
+    def getSimilarSchedules(school_name):
+        return UniSchedule.query.filter(UniSchedule.school_name[0] == school_name[0]).all()
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
         
     # 학교명
