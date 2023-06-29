@@ -250,6 +250,7 @@ class CertReview(db.Model):
         self.content = content
         #년 월 일 시 분 초 Micro초 타임존
         self.created_at = datetime.now(timezone('UTC')).astimezone(timezone('Asia/Seoul'))
+        self.updated_at = self.created_at
         
     def create(cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes):
         review = CertReview(cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes)
@@ -289,6 +290,8 @@ class CertReview(db.Model):
     num_attempts = db.Column(db.Integer, nullable = False)
     #리뷰 쓰여진 시간+날짜
     created_at = db.Column(db.DateTime, nullable = False)
+    #리뷰 업데이트 된 날짜
+    updated_at = db.Column(db.DateTime, nullable = False)
     
     def __repr__(self):
         return f'<CertReview cert_name = {self.cert_name}, username = {self.username},\
@@ -296,41 +299,47 @@ class CertReview(db.Model):
  num_likes = {self.num_likes}, content = {self.content}>'
     
 class LectureReview(db.Model):
-    def __init__(self, university, lecturename, lectureid, username, content, like_amount, load, grade):
-        self.university = university
-        self.lecturename = lecturename
-        self.lectureid = lectureid
+    def __init__(self, school_name, lecture_name, lecture_id, username, content, load, grade, num_likes=0):
+        self.school_name = school_name
+        self.lecture_name = lecture_name
+        self.lectureid = lecture_id
         self.username = username
         self.content = content
-        self.like_amount = 0
+        self.num_likes = num_likes
         self.load = load
         self.grade = grade
+        #년 월 일 시 분 초 Micro초 타임존
+        self.created_at = datetime.now(timezone('UTC')).astimezone(timezone('Asia/Seoul'))
+        self.updated_at = self.created_at
 
+    def create(school_name, lecture_name, lecture_id, username, content, load, grade):
+        review = LectureReview(school_name, lecture_name, lecture_id, username, content, load, grade)
+        db.session.add(review)
+        db.session.commit()
+        db.session.close()
+        return LectureReview.query.filter(LectureReview.id == review.id).first()
+    
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    
     #대학교 이름
-    university = db.Column(db.String(20), nullable = False)
-    
+    school_name = db.Column(db.String(20), nullable = False)
     #강좌 이름
-    lecturename = db.Column(db.String(20), nullable = False)
-    
+    lecture_name = db.Column(db.String(20), nullable = False)
     #강좌 ID
-    lectureid = db.Column(db.Integer, db.ForeignKey('uni_lecture.id'), nullable = False)
-    
+    lecture_id = db.Column(db.Integer, db.ForeignKey('uni_lecture.id'), nullable = False)
     #유저 ID
     username = db.Column(db.String(20), nullable = False)
-    
     #리뷰 내용
     content = db.Column(db.Text, nullable = True)
-    
     #좋아요 수
-    like_amount = db.Column(db.Integer, nullable = True)
-    
+    num_likes = db.Column(db.Integer, nullable = True)
     #과제
     load = db.Column(db.String(20), nullable = False)
-    
     #학점
     grade = db.Column(db.String(10), nullable = False)
+    #리뷰 쓰여진 시간+날짜
+    created_at = db.Column(db.DateTime, nullable = False)
+    #리뷰 업데이트 된 날짜
+    updated_at = db.Column(db.DateTime, nullable = False)
     
     def __repr__(self):
         return f'<LectureReview university = {self.university}, lecturename = {self.lecturename}, username = {self.username}, content = {self.content}, load = {self.load}, grade = {self.grade}>'

@@ -1,13 +1,14 @@
 import os
 from flask import Flask, request
 import requests
-from models import bcrypt, db, Cert, CertStats, UniSchedule, UniLecture, User, CertReview
+from models import bcrypt, db, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview
 import xml.etree.ElementTree as ET
 from flask_login import LoginManager, login_required, login_user, current_user, logout_user
 from config import SECRET_KEY, DB_SERVICE_KEY
 app = Flask("app")
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+
 # 임시!!!!!
 app.secret_key = SECRET_KEY
 
@@ -161,10 +162,7 @@ def get_lecture():
     
     lectures = UniLecture.getLectures(school_name)
     
-    if lectures:
-        return lectures
-        
-    return "Lecture not found"
+    return lectures
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -264,6 +262,23 @@ def get_review():
         
     elif category is None:
         return CertReview.getAllReviews()
+
+@app.route('/create_lect_review', methods=['POST'])
+def create_lect_review():
+    school_name = request.get_json()['school_name']
+    lecture_name = request.get_json()['lecture_name']
+    lecture_id = request.get_json()['lecture_id']
+    username = request.get_json()['username']
+    content = request.get_json()['content']
+    num_likes = request.get_json()['num_likes']
+    load = request.get_json()['load']
+    grade = request.get_json()['grade']
+    
+    review = LectureReview.create(school_name, lecture_name, lecture_id, username, content, load, grade)
+    
+    if review:
+        return (review, "리뷰를 성공적으로 작성했습니다.")
+    return (None, "리뷰 작성 실패")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='80')
