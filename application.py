@@ -148,10 +148,8 @@ def get_uni():
     
     if school:
         return school
-    
-    else:
-        schools = UniSchedule.getSimilarSchedules(school_name)
-        return schools
+
+    return UniSchedule.getSimilarSchedules(school_name)
 
 @app.route('/get_lecture', methods=['POST'])
 def get_lecture():
@@ -185,19 +183,17 @@ def login():
         return validate_username(username) and validate_pw(password)
 
     if validate(username, password):
-        print("hi")
         user = User.authenticate(username, password)
         if user:
-            login_user(user)
-            print(current_user.is_authenticated)
-        else:
-            print('login_failed')
-    return 'login test'
+            # login_user(user)
+            return (user, "유저 확인")
+    return (None, "유저 확인 실패")
+    
 
 @app.route('/logout')
 @login_required
 def logout():
-    logout_user()
+    # logout_user()
     print(current_user.sepis_authenticated)
     return "logged out"
 
@@ -218,12 +214,10 @@ def register():
 
         if user:
             # login_user(user)
-            return "회원가입 완료"
+            return (user, "회원가입 완료")
 
-        else:
-            return "오류"
+        return (None, "오류")
 
-    return "register test"
 
 # 앞으로 이름 더 자세하게 지으세요.
 @app.route('/create_cert_review', methods=['POST'])
@@ -296,5 +290,6 @@ def get_lect_review():
         
     elif category is None:
         return LectureReview.getAllReviews()
+    
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='80')
