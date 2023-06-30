@@ -5,6 +5,7 @@ import pandas as pd
 from models import db, Cert, CertStats, UniSchedule, UniLecture
 from config import DB_SERVICE_KEY
 
+
 def get_new_lists():
     BODY = 1
     ITEMS = 0
@@ -137,7 +138,7 @@ def get_new_lists():
     get_certs(SERIESCD)
     get_certStats(GRADECD, YEARCD)
 
-def university():
+def uni_schedule():
     df = pd.read_excel('excel/23.1 academic calendar.xlsx')
     NUM_ROWS = df.shape[0]
     COLS = df.columns
@@ -146,7 +147,6 @@ def university():
         for col in COLS:
             cal_dict[col] = df[col][row]
         db_row = UniSchedule(cal_dict['대학'], cal_dict['수강 신청일'], cal_dict['개강일'], cal_dict['수강신청 정정일'], cal_dict['수강 철회일'], cal_dict['종강일'])
-        print(db_row)
         db.session.add(db_row)
     db.session.commit()
     db.session.close()
@@ -170,3 +170,10 @@ def lecture():
     db.session.commit()
     db.session.close()
     return 'lectures!'
+
+# def add_military():
+#     df = pd.read_excel('excel/test_certs_stats.xlsx', sheet_name='2-1(서비스)')
+#     NUM_ROWS = df.shape[0]
+#     NUM_COLS = df.shape[1]
+#     COLS = df.columns[1:]
+#     for row in range(NUM_ROWS):
