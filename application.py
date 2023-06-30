@@ -3,7 +3,7 @@ from flask import Flask, request
 import requests
 from models import bcrypt, db, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview
 import xml.etree.ElementTree as ET
-from flask_login import LoginManager, login_required, login_user, current_user, logout_user
+from flask_login import LoginManager
 from config import SECRET_KEY, DB_SERVICE_KEY
 app = Flask("app")
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -162,61 +162,61 @@ def get_lecture():
     
     return lectures
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.get(user_id)
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User.get(user_id)
 
-@app.route('/login', methods=['POST'])
-def login():
-    username = request.get_json()['username']
-    password = request.get_json()['password']
-    def validate(username, password):
-        def validate_username(username):
-            # 임시
-            print("username validated")
-            return True
-        def validate_pw(password):
-            # 임시
-            print("password validated")
-            return True
+# @app.route('/login', methods=['POST'])
+# def login():
+#     username = request.get_json()['username']
+#     password = request.get_json()['password']
+#     def validate(username, password):
+#         def validate_username(username):
+#             # 임시
+#             print("username validated")
+#             return True
+#         def validate_pw(password):
+#             # 임시
+#             print("password validated")
+#             return True
 
-        return validate_username(username) and validate_pw(password)
+#         return validate_username(username) and validate_pw(password)
 
-    if validate(username, password):
-        user = User.authenticate(username, password)
-        if user:
-            # login_user(user)
-            return (user, "유저 확인")
-    return (None, "유저 확인 실패")
+#     if validate(username, password):
+#         user = User.authenticate(username, password)
+#         if user:
+#             # login_user(user)
+#             return (user, "유저 확인")
+#     return (None, "유저 확인 실패")
     
 
-@app.route('/logout')
-@login_required
-def logout():
-    # logout_user()
-    print(current_user.sepis_authenticated)
-    return "logged out"
+# @app.route('/logout')
+# @login_required
+# def logout():
+#     # logout_user()
+#     print(current_user.sepis_authenticated)
+#     return "logged out"
 
-@app.route('/register', methods=['POST'])
-def register():
+# @app.route('/register', methods=['POST'])
+# def register():
 
-    name = request.get_json()['name']
-    username = request.get_json()['username']
-    password = request.get_json()['password']
-    re_password = request.get_json()['re_password']
+#     name = request.get_json()['name']
+#     username = request.get_json()['username']
+#     password = request.get_json()['password']
+#     re_password = request.get_json()['re_password']
 
-    if not (name and username and password and re_password):
-        return "모두 입력해주세요"
-    elif password != re_password:
-        return "비밀번호를 확인해주세요"
-    else:
-        user = User.signup(name, username, password)
+#     if not (name and username and password and re_password):
+#         return "모두 입력해주세요"
+#     elif password != re_password:
+#         return "비밀번호를 확인해주세요"
+#     else:
+#         user = User.signup(name, username, password)
 
-        if user:
-            # login_user(user)
-            return (user, "회원가입 완료")
+#         if user:
+#             # login_user(user)
+#             return (user, "회원가입 완료")
 
-        return (None, "오류")
+#         return (None, "오류")
 
 
 # 앞으로 이름 더 자세하게 지으세요.
@@ -290,6 +290,8 @@ def get_lect_review():
         
     elif category is None:
         return LectureReview.getAllReviews()
+    
+from user import *
     
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='80')

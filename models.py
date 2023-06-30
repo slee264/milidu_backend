@@ -74,7 +74,7 @@ class CertStats(db.Model):
     total_passed_m = db.Column(db.Integer, nullable=True)
     
     def __repr__(self):
-        return f'<CertStats cert_id = {self.cert_id}, CertNAME = {self.name}, CertYEAR = {self.year}, total_taken = {self.total_taken}, total_passed = {self.total_take}'
+        return f'<CertStats cert_id = {self.cert_id}, CertNAME = {self.name}, CertYEAR = {self.year}, total_taken = {self.total_taken}, total_passed = {self.total_passed}'
     
 class UniSchedule(db.Model):
     def __init__(self, school_name, reg_dates, sem_start, reg_change_dates, reg_cancel_dates, sem_end_date):
@@ -207,13 +207,12 @@ class User(UserMixin, db.Model):
             user = User(name, username, pw_hash)
             db.session.add(user)
             db.session.commit()
-            db.session.close()
-            return user
+            return User.query.filter(User.id == user.id).first()
         return None
 
     def authenticate(username, password):
         user = User.query.filter(User.username == username).first()
-        if bcrypt.check_password_hash(user.password, password):
+        if user and bcrypt.check_password_hash(user.password, password):
             print("user authenticated")
             return user
         return None

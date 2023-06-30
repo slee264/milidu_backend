@@ -135,7 +135,7 @@ def get_new_lists():
                 db.session.add(row)
         db.session.commit()
         db.session.close()
-    get_certs(SERIESCD)
+    # get_certs(SERIESCD)
     get_certStats(GRADECD, YEARCD)
 
 def uni_schedule():
