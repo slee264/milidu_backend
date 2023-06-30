@@ -162,63 +162,6 @@ def get_lecture():
     
     return lectures
 
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User.get(user_id)
-
-# @app.route('/login', methods=['POST'])
-# def login():
-#     username = request.get_json()['username']
-#     password = request.get_json()['password']
-#     def validate(username, password):
-#         def validate_username(username):
-#             # 임시
-#             print("username validated")
-#             return True
-#         def validate_pw(password):
-#             # 임시
-#             print("password validated")
-#             return True
-
-#         return validate_username(username) and validate_pw(password)
-
-#     if validate(username, password):
-#         user = User.authenticate(username, password)
-#         if user:
-#             # login_user(user)
-#             return (user, "유저 확인")
-#     return (None, "유저 확인 실패")
-    
-
-# @app.route('/logout')
-# @login_required
-# def logout():
-#     # logout_user()
-#     print(current_user.sepis_authenticated)
-#     return "logged out"
-
-# @app.route('/register', methods=['POST'])
-# def register():
-
-#     name = request.get_json()['name']
-#     username = request.get_json()['username']
-#     password = request.get_json()['password']
-#     re_password = request.get_json()['re_password']
-
-#     if not (name and username and password and re_password):
-#         return "모두 입력해주세요"
-#     elif password != re_password:
-#         return "비밀번호를 확인해주세요"
-#     else:
-#         user = User.signup(name, username, password)
-
-#         if user:
-#             # login_user(user)
-#             return (user, "회원가입 완료")
-
-#         return (None, "오류")
-
-
 # 앞으로 이름 더 자세하게 지으세요.
 @app.route('/create_cert_review', methods=['POST'])
 def create_cert_review():
