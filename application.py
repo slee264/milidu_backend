@@ -4,13 +4,10 @@ import requests
 from models import bcrypt, db, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview
 import xml.etree.ElementTree as ET
 from flask_login import LoginManager
-from config import SECRET_KEY, DB_SERVICE_KEY
-app = Flask("app")
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+from config import DB_SERVICE_KEY
+from __init__ import create_app
 
-# 임시!!!!!
-app.secret_key = SECRET_KEY
+app = create_app()
 
 db.init_app(app)
 bcrypt.init_app(app)
