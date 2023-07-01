@@ -1,4 +1,4 @@
-from application import app, request, login_manager, db
+from application import app, request, login_manager, db, jsonify
 from flask_login import login_required, login_user, current_user, logout_user
 from models import User
 
@@ -28,8 +28,8 @@ def login():
         user = User.authenticate(username, password)
         if user:
             # login_user(user)
-            return {"message": "유저 확인", {"id": user.id, "name": user.name}}
-    return {"message": "유저 확인 실패", "user": None}
+            return jsonify(user, status=200)
+    return jsonify(None, status=404)
     
 
 @app.route('/logout')
@@ -57,5 +57,5 @@ def signup():
         if user:
             db.session.close()
             # login_user(user)
-            return {"message": "유저 가입 완료", "user": {"id": user.id, "name": user.name}}
-        return {"message": "유저 가입 실패", "user": None}
+            return jsonify(user, status=200)
+        return jsonify(None, status=404)

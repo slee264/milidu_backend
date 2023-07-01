@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import requests
 from models import bcrypt, db, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview
 import xml.etree.ElementTree as ET
@@ -25,7 +25,7 @@ def certs():
     for cert in data:
         val = {'name': cert.name, 'name_eng': cert.name_eng, 'code': cert.code, 'ministry': cert.ministry, 'host': cert.host, 'majors': cert.related_majors }
         certlist.append(val)
-    return certlist
+    return jsonify(certlist, status=200)
 
 @app.route('/stats', methods=['GET'])
 def stats():
@@ -36,10 +36,10 @@ def stats():
     else:
         if cert_code is not None:
             if len(cert_code) != 4:
-                return "Certification code not valid."
+                return jsonify(None, status=400)
         for digit in cert_code:
             if not digit.isdigit():
-                return "Certification code not valid."
+                return jsonify(None, status=400)
         cert_id = Cert.getCertByCode(cert_code).id
         data = CertStats.getCertStatsByCertId(cert_id)
     statslist = []
@@ -50,7 +50,7 @@ def stats():
         else:
             val = {'name': stats.name, 'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed, 'pass_rate': 0}
             statslist.append(val)
-    return statslist
+    return jsonify(statslist, status=200)
 
 @app.route('/schedule', methods=['POST'])
 def schedule():
@@ -58,10 +58,10 @@ def schedule():
 
     if cert_code is not None:
         if len(cert_code) != 4:
-            return "Certification code not valid."
+            return jsonify(None, status=400)
         for digit in cert_code:
             if not digit.isdigit():
-                return "Certification code not valid."
+                return jsonify(None, status=400)
     else:
         return "Certification code not provided. '.../schedule?cert_code={CERTIFICATION CODE}'"
     BODY = 1
@@ -135,32 +135,33 @@ def schedule():
             schedule['합격발표종료'] = ""
         schedule_list.append(schedule)
 
-    return schedule_list
+    return jsonify(schedule_list, status=200)
 
 @app.route('/get_unischedule', methods=['POST'])
 def get_uni():
     school_name = request.get_json()['name']
     
     if len(school_name) == 0:
-        return UniSchedule.getAllSchedules()
-    
-    school = UniSchedule.getSchedule(school_name)
-    
-    if school:
-        return school
+        return jsonify(UniSchedule.getAllSchedules(), status=200)
 
-    return UniSchedule.getSimilarSchedules(school_name)
+    schedule = UniSchedule.getSchedule(school_name)
+    
+    if schedule:
+        return jsonify(schedule, status=200)
+
+    schedule = UniSchedule.getSimilarSchoolSchedules(school_name)
+    return jsonify(schedule, status=200)
 
 @app.route('/get_lecture', methods=['POST'])
 def get_lecture():
     school_name = request.get_json()['name']
     
     if len(school_name) == 0:
-        return UniLecture.getAllLectures()
+        return jsonify(UniLecture.getAllLectures(), status=200)
     
     lectures = UniLecture.getLectures(school_name)
     
-    return lectures
+    return jsonify(lectures, status=200)
 
 # 앞으로 이름 더 자세하게 지으세요.
 @app.route('/create_cert_review', methods=['POST'])
@@ -179,9 +180,9 @@ def create_cert_review():
                                recommend_book, num_attempts, content, num_likes)
     
     if review:
-        return (review, "리뷰를 성공적으로 작성했습니다.")
-    
-    return (None, "리뷰 작성 실패")
+        return jsonify(review, status=200)
+
+    return jsonify(None, status=500)
 
 @app.route('/get_cert_review', methods=['POST'])
 def get_review():
@@ -191,14 +192,14 @@ def get_review():
     
     if category == '글쓴이':
         reviews = CertReview.getReviewByUsername(keyword)
-        return reviews
+        return jsonify(reviews, status=200)
     
     elif category == '자격증명':
         reviews = CertReview.getReviewByCertName(keyword)
-        return reviews
+        return jsonify(reviews, status=200)
         
     elif category is None:
-        return CertReview.getAllReviews()
+        return jsonify(CertReview.getAllReviews(), status=200)
 
 @app.route('/create_lect_review', methods=['POST'])
 def create_lect_review():
@@ -214,8 +215,8 @@ def create_lect_review():
     review = LectureReview.create(school_name, lecture_name, lecture_id, username, content, load, grade)
     
     if review:
-        return (review, "리뷰를 성공적으로 작성했습니다.")
-    return (None, "리뷰 작성 실패")
+        return jsonify(review, status=200)
+    return jsonify(None, status=500)
 
 @app.route('/get_lect_review', methods=['POST'])
 def get_lect_review():
@@ -225,14 +226,14 @@ def get_lect_review():
     
     if category == '글쓴이':
         reviews = LectureReview.getReviewByUsername(keyword)
-        return reviews
+        return jsonify(reviews, status=200)
     
     elif category == '강좌명':
         reviews = LectureReview.getReviewByCertName(keyword)
-        return reviews
+        return jsonify(reviews, status=200)
         
     elif category is None:
-        return LectureReview.getAllReviews()
+        return jsonify(LectureReview.getAllReviews(), status=200)
     
 from user import *
     

@@ -106,7 +106,7 @@ class UniSchedule(db.Model):
         schedule = UniSchedule.query.filter(UniSchedule.school_name == school_name).first()
         return schedule
     
-    def getSimilarSchedules(school_name):
+    def getSimilarSchoolSchedules(school_name):
         return UniSchedule.query.filter(UniSchedule.school_name[0] == school_name[0]).all()
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
         
@@ -257,6 +257,9 @@ class CertReview(db.Model):
         db.session.commit()
         db.session.close()
         
+        return CertReview.query.filter(CertReview.id == review.id).first()
+    
+    def getReviewById(id):
         return CertReview.query.filter(CertReview.id == review.id).first()
     
     def getAllReviews():
