@@ -74,15 +74,18 @@ def test_get_unischedule_route(client):
     assert response.status == '200 OK'
     assert b'reg_start' in response.data
     assert b'school_name' in response.data
+    assert str.encode("서울대학교") in response.data
     
     response = client.post('/get_unischedule', data={"school_name": "서울대학"})
     assert response.status == '200 OK'
     assert b'reg_start' in response.data
     assert b'school_name' in response.data
+    assert str.encode("서울대학교") in response.data
+    assert str.encode("남서울대학교") in response.data
     
-def get_lecture_test(client):
+def test_get_lecture_route(client):
     response = client.post('/get_lecture')
-    
+    assert response.status == '200 OK'
 # def create_cert_review_test(client):
     
 # def get_review_test(client):

@@ -14,7 +14,7 @@ bcrypt.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-app.json.ensure_ascii = True
+app.json.ensure_ascii = False
 
 @app.route('/certs', methods=['GET'])
 def certs():
@@ -139,15 +139,16 @@ def schedule():
     return jsonify(schedule_list), 200 if schedule_list else jsonify({'message': "Certification found. '.../\
                         stats?cert_code={CERTIFICATION CODE}'"}), 404
 
-@app.route('/get_unischedule', methods=['POST'])
-def get_uni():
-    def serialize(schedule_lst):
+def serialize(schedule_lst):
         result = []
         for row in schedule_lst:
             row_dict = row.__dict__
             row_dict.pop('_sa_instance_state', None)
             result.append(row_dict)
         return result
+    
+@app.route('/get_unischedule', methods=['POST'])
+def get_uni():
     
     school_name = None
     if request.is_json and request.get_json()['school_name']:
@@ -168,14 +169,15 @@ def get_uni():
 
 @app.route('/get_lecture', methods=['POST'])
 def get_lecture():
-    school_name = request.get_json()['name']
-    
-    if len(school_name) == 0:
-        return jsonify(UniLecture.getAllLectures()), 200
+    school_name = None
+    if request.is_json and request.get_json()['school_name']:
+        school_name = request.get_json()['school_name']
+        
+    if school_name is None:
+        return jsonify(serialize(UniLecture.getAllLectures())), 200
     
     lectures = UniLecture.getLectures(school_name)
-    
-    return jsonify(lectures, status=200)
+    return jsonify(serialize(lectures)), 200
 
 # 앞으로 이름 더 자세하게 지으세요.
 @app.route('/create_cert_review', methods=['POST'])
