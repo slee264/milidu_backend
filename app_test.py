@@ -19,5 +19,7 @@ def runner(app):
     return app.test_cli_runner()
 
 def test(client):
+
+
     response = client.get('/certs')
-    print(response)
+    assert response.status_code == 200
