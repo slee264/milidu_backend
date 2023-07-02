@@ -3,8 +3,6 @@ import requests
 import pandas as pd
 import time
 
-
-from lxml import html
 from models import db, Cert, CertStats, UniSchedule, UniLecture
 from config import DB_SERVICE_KEY
 
@@ -153,9 +151,9 @@ def get_new_lists():
         db.session.commit()
         db.session.close()
     
-    get_certs(SERIESCD)
+    # get_certs(SERIESCD)
+    # add_service_certs()
     get_certStats(GRADECD, YEARCD)
-    add_service_certs()
 
 def uni_schedule():
     df = pd.read_excel('excel/23.1 academic calendar.xlsx')

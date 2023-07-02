@@ -14,7 +14,7 @@ bcrypt.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-app.config['JSON_AS_ASCII'] = False
+app.json.ensure_ascii = True
 
 @app.route('/certs', methods=['GET'])
 def certs():
@@ -25,22 +25,23 @@ def certs():
         certlist.append(val)
     return jsonify(data=certlist, status=200)
 
-
 @app.route('/stats', methods=['GET'])
 def stats():
-    cert_code = request.args.get('cert_code', None)
+    cert_code = request.args.get('cert_code')
     data = None
     if cert_code is None:
         data = CertStats.getAllCertStats()
     else:
         if cert_code is not None:
             if len(cert_code) != 4:
-                return jsonify(None, status=400)
+                return jsonify(None), 404
         for digit in cert_code:
             if not digit.isdigit():
-                return jsonify(None, status=400)
-        cert_id = Cert.getCertByCode(cert_code).id
-        data = CertStats.getCertStatsByCertId(cert_id)
+                return jsonify(None), 404
+        cert = Cert.getCertByCode(cert_code)
+        if cert is None:
+            return jsonify(None), 404
+        data = CertStats.getCertStatsByCertId(cert.id)
     statslist = []
     for stats in data:
         if stats.total_taken is not 0:
@@ -49,7 +50,8 @@ def stats():
         else:
             val = {'name': stats.name, 'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed, 'pass_rate': 0}
             statslist.append(val)
-    return jsonify(statslist, status=200)
+            
+    return jsonify(statslist), 200
 
 @app.route('/schedule', methods=['POST'])
 def schedule():
