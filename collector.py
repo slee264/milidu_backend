@@ -1,8 +1,10 @@
 import xml.etree.ElementTree as ET
 import requests
 import pandas as pd
-from lxml import html
+import time
 
+
+from lxml import html
 from models import db, Cert, CertStats, UniSchedule, UniLecture
 from config import DB_SERVICE_KEY
 
@@ -94,10 +96,10 @@ def get_new_lists():
 
     def get_certStats(gradeCD: [str], yearCD: [str]):
         stats_dict = {}
-        for grcd in GRADECD:
-            for yrcd in YEARCD:
+        for grcd in gradeCD:
+            for yrcd in yearCD:
                 stats_xml_url = 'http://openapi.q-net.or.kr/api/service/rest/InquiryQualPassRateSVC/getList'
-                stats_xml_params ={'serviceKey' : DB_SERVICE_KEY, 'grdCd' : grcd, 'baseYY' : yrcd, 'pageNo' : '1', 'numOfRows' : '1500' }
+                stats_xml_params ={'serviceKey' : DB_SERVICE_KEY, 'grdCd' : grcd, 'baseYY' : yrcd, 'pageNo' : '1', 'numOfRows' : '1500' }        #7분 소요
                 stats_xml = requests.get(stats_xml_url, params=stats_xml_params)
                 stats_xml_root = ET.fromstring(stats_xml.content)
                 for item in stats_xml_root[BODY][ITEMS]:
@@ -136,8 +138,24 @@ def get_new_lists():
                 db.session.add(row)
         db.session.commit()
         db.session.close()
+        
+    def add_service_certs():
+        df = pd.read_excel('excel/service_Certs.xlsx')
+        NUM_ROWS = df.shape[0]
+        NUM_COLS = df.shape[1]
+        COLS = df.columns[:]
+        for row in range(NUM_ROWS):
+            service_dict={}
+            for col in COLS:
+                service_dict[col] = df[col][row]
+            row = Cert(service_dict['name'], service_dict['name_eng'], str(service_dict['code']), service_dict['ministry'], service_dict['host'], service_dict['majors'])
+            db.session.add(row)
+        db.session.commit()
+        db.session.close()
+    
     get_certs(SERIESCD)
-    # get_certStats(GRADECD,YEARCD)
+    get_certStats(GRADECD,YEARCD)
+    add_service_certs()
 
 def uni_schedule():
     df = pd.read_excel('excel/23.1 academic calendar.xlsx')
@@ -187,17 +205,24 @@ def add_service_certs():
     db.session.close()
 
     
+
     
-# def get_certStats(gradeCD: [str], yearCD: [str]):
+# def get_certStats():
+#     start = time.time()
+#     GRADECD = ['10', '20', '30', '40']
+#     YEARCD = ['2018', '2019', '2020', '2021', '2022']
 #     BODY = 1
 #     ITEMS = 0
 #     stats_dict = {}
-#     for grcd in gradeCD:
-#         for yrcd in yearCD:
+#     for grcd in GRADECD:
+#         for yrcd in YEARCD:
 #             stats_xml_url = 'http://openapi.q-net.or.kr/api/service/rest/InquiryQualPassRateSVC/getList'
 #             stats_xml_params ={'serviceKey' : DB_SERVICE_KEY, 'grdCd' : grcd, 'baseYY' : yrcd, 'pageNo' : '1', 'numOfRows' : '1500' }
-#             stats_xml = requests.get(stats_xml_url, params=stats_xml_params)
-#             stats_xml_root = ET.fromstring(stats_xml.content)
+#             print("time :", time.time() - start)
+            # stats_xml = requests.get(stats_xml_url, params=stats_xml_params)
+            
+            # stats_xml_root = ET.fromstring(stats_xml.content)
+            
     #         for item in stats_xml_root[BODY][ITEMS]:
     #             val = []
     #             if item.find("examTypCcd").text == '실기':
@@ -231,6 +256,6 @@ def add_service_certs():
     #         for data in item[1]:
     #             row = CertStats(item[0], data[0], data[1], data[2])
     #             print(row)
-        #         db.session.add(row)
-        # db.session.commit()
-        # db.session.close()
+    #             db.session.add(row)
+    #     db.session.commit()
+    #     db.session.close()
