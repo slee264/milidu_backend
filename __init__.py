@@ -1,7 +1,7 @@
 import os
 from flask import Flask
-
 from config import SECRET_KEY
+
 def create_app(test_config=None):
     app = Flask("app")
     basedir = os.path.abspath(os.path.dirname(__file__))
@@ -11,7 +11,7 @@ def create_app(test_config=None):
     )
     
     # if test_config is None:
-        
+    
     # else:
     
     

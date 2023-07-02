@@ -14,6 +14,7 @@ bcrypt.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+app.config['JSON_AS_ASCII'] = False
 
 @app.route('/certs', methods=['GET'])
 def certs():
@@ -23,6 +24,7 @@ def certs():
         val = {'name': cert.name, 'name_eng': cert.name_eng, 'code': cert.code, 'ministry': cert.ministry, 'host': cert.host, 'majors': cert.related_majors }
         certlist.append(val)
     return jsonify(data=certlist, status=200)
+
 
 @app.route('/stats', methods=['GET'])
 def stats():
