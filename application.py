@@ -25,7 +25,7 @@ def certs():
         certlist.append(val)
     return jsonify(data=certlist, status=200)
 
-@app.route('/stats', methods=['GET'])
+@app.route('/cert_stats', methods=['GET'])
 def stats():
     cert_code = request.args.get('cert_code')
     data = None
@@ -34,13 +34,13 @@ def stats():
     else:
         if cert_code is not None:
             if len(cert_code) != 4:
-                return jsonify(None), 404
+                return jsonify({'message': "Certification code not valid. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
         for digit in cert_code:
             if not digit.isdigit():
-                return jsonify(None), 404
+                return jsonify({'message': "Certification code not valid. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
         cert = Cert.getCertByCode(cert_code)
         if cert is None:
-            return jsonify(None), 404
+            return jsonify({'message': "Certification not found. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
         data = CertStats.getCertStatsByCertId(cert.id)
     statslist = []
     for stats in data:
@@ -53,18 +53,18 @@ def stats():
             
     return jsonify(statslist), 200
 
-@app.route('/schedule', methods=['POST'])
+@app.route('/cert_test_schedule', methods=['POST'])
 def schedule():
-    cert_code = request.args.get('cert_code', None)
+    cert_code = request.args.get('cert_code')
 
     if cert_code is not None:
         if len(cert_code) != 4:
-            return jsonify(None, status=400)
+            return jsonify({'message': "Certification code not valid. '.../schedule?cert_code={CERTIFICATION CODE}'"}), 404
         for digit in cert_code:
             if not digit.isdigit():
-                return jsonify(None, status=400)
+                return jsonify({'message': "Certification code not valid. '.../schedule?cert_code={CERTIFICATION CODE}'"}), 404
     else:
-        return "Certification code not provided. '.../schedule?cert_code={CERTIFICATION CODE}'"
+        return jsonify({'message': "Certification not valid. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
     BODY = 1
     ITEMS = 0
     schedule_xml_url = 'http://openapi.q-net.or.kr/api/service/rest/InquiryTestInformationNTQSVC/getJMList'
@@ -136,29 +136,42 @@ def schedule():
             schedule['합격발표종료'] = ""
         schedule_list.append(schedule)
 
-    return jsonify(schedule_list, status=200)
+    return jsonify(schedule_list), 200 if schedule_list else jsonify({'message': "Certification found. '.../\
+                        stats?cert_code={CERTIFICATION CODE}'"}), 404
 
 @app.route('/get_unischedule', methods=['POST'])
 def get_uni():
-    school_name = request.get_json()['name']
+    def serialize(schedule_lst):
+        result = []
+        for row in schedule_lst:
+            row_dict = row.__dict__
+            row_dict.pop('_sa_instance_state', None)
+            result.append(row_dict)
+        return result
     
-    if len(school_name) == 0:
-        return jsonify(UniSchedule.getAllSchedules(), status=200)
+    school_name = None
+    if request.is_json and request.get_json()['school_name']:
+        school_name = request.get_json()['school_name']
+    
+    if school_name is None:
+        return jsonify(serialize(UniSchedule.getAllSchedules())), 200
 
     schedule = UniSchedule.getSchedule(school_name)
     
     if schedule:
-        return jsonify(schedule, status=200)
+        schedule = schedule.__dict__
+        schedule.pop('_sa_instance_state', None)
+        return jsonify(schedule), 200
 
     schedule = UniSchedule.getSimilarSchoolSchedules(school_name)
-    return jsonify(schedule, status=200)
+    return jsonify(serialize(schedule)), 200
 
 @app.route('/get_lecture', methods=['POST'])
 def get_lecture():
     school_name = request.get_json()['name']
     
     if len(school_name) == 0:
-        return jsonify(UniLecture.getAllLectures(), status=200)
+        return jsonify(UniLecture.getAllLectures()), 200
     
     lectures = UniLecture.getLectures(school_name)
     

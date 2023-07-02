@@ -107,7 +107,7 @@ class UniSchedule(db.Model):
         return schedule
     
     def getSimilarSchoolSchedules(school_name):
-        return UniSchedule.query.filter(UniSchedule.school_name[0] == school_name[0]).all()
+        return UniSchedule.query.filter(UniSchedule.school_name.contains(school_name)).all()
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
         
     # 학교명
