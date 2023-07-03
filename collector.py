@@ -253,3 +253,33 @@ def add_service_certs():
     #             db.session.add(row)
     #     db.session.commit()
     #     db.session.close()
+
+    
+    
+def add_military_stats():
+    df = pd.read_excel('excel/Army_Certs_Stats.xlsx')
+    NUM_ROWS = df.shape[0]
+    NUM_COLS = df.shape[1]
+    COLS = df.columns[1:]
+    for row in range(86, NUM_ROWS):
+        military_dict={}
+        for col in COLS:
+            military_dict[col]=df[col][85]
+        if military_dict['자격증 종류'] != '계':
+            if military_dict['자격증 종목'] == '산업기사':
+                data = CertStats.query.filter(CertStats.name == military_dict['자격증 종류'] + '기사', CertStats.year == '2018').first()
+                if data:
+                    data.total_taken_m = int(military_dict['응시'])
+                    data.total_passed_m = int(military_dict['합격'])
+            elif military_dict['자격증 종목'] == '기능사':
+                data = CertStats.query.filter(CertStats.name == military_dict['자격증 종류'] + '기능사', CertStats.year == '2018').first()
+                if data:
+                    data.total_taken_m = int(military_dict['응시'])
+                    data.total_passed_m = int(military_dict['합격'])
+            db.session.commit()
+            db.session.close()
+
+#     row.name = ""
+    
+    # db.session.commit()
+
