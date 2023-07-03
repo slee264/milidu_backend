@@ -8,13 +8,14 @@ db = SQLAlchemy()
 bcrypt = Bcrypt()
 
 class Cert(db.Model):
-    def __init__(self, name, name_eng, code, ministry, host, related_majors):
+    def __init__(self, name, name_eng, code, ministry, host, related_majors, description):
         self.name = name
         self.name_eng = name_eng
         self.code = code
         self.ministry = ministry
         self.host = host
         self.related_majors = related_majors
+        self.description = description
         
     def getAllCerts():
         return Cert.query.all()
@@ -36,7 +37,7 @@ class Cert(db.Model):
     # 관련 전공
     related_majors = db.Column(db.String(100), nullable=True)
     # 자격증 설명 optional
-    description = db.Column(db.String(200), nullable=True)
+    description = db.Column(db.Text, nullable=True)
     
     def __repr__(self):
         return f'<Certificate id = {self.id}, name = {self.name}, name_eng = {self.name_eng}, code = {self.code}, ministry = {self.ministry}, host = {self.host}, majors = {self.related_majors}>'

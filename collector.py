@@ -125,12 +125,15 @@ def get_new_lists():
                     val.append(item.find("implNm").text)
                 else:
                     val.append("")
+                if item.find("summary") is not None:
+                    val.append(item.find("summary").text)
+                else:
+                    val.append("")
                 st = set()
                 if item.find("mdobligFldNm") is not None:
                     lst = item.find("mdobligFldNm").text.split(".")
                     for s in lst:
                         st.add(s)
-
                 cert_dict[item.find("jmNm").text] = val + [st]
 
         # related_major_url = 'http://openapi.q-net.or.kr/api/service/rest/InquiryMjrQualSVC/getList'
@@ -161,9 +164,9 @@ def get_new_lists():
         for item in cert_dict.items():
             item = list(item)
             major_list_str = ""
-            for major in item[1][4]:
+            for major in item[1][5]:
                 major_list_str += major + ", "
-            row = Cert(item[0], item[1][0], item[1][1], item[1][2], item[1][3], major_list_str[:-2])
+            row = Cert(item[0], item[1][0], item[1][1], item[1][2], item[1][3], major_list_str[:-2], item[1][4])
             db.session.add(row)
         db.session.commit()
         db.session.close()
@@ -213,24 +216,24 @@ def get_new_lists():
         db.session.commit()
         db.session.close()
 
-def add_service_certs():
-        df = pd.read_excel('excel/service_Certs.xlsx')
-        NUM_ROWS = df.shape[0]
-        NUM_COLS = df.shape[1]
-        COLS = df.columns[:]
-        for row in range(NUM_ROWS):
-            service_dict={}
-            for col in COLS:
-                service_dict[col] = df[col][row]
-            row = Cert(service_dict['name'], service_dict['name_eng'], str(service_dict['code']), service_dict['ministry'], service_dict['host'], service_dict['majors'])
-            db.session.add(row)
-        db.session.commit()
-        db.session.close()
+    def add_service_certs():
+            df = pd.read_excel('excel/service_Certs.xlsx')
+            NUM_ROWS = df.shape[0]
+            NUM_COLS = df.shape[1]
+            COLS = df.columns[:]
+            for row in range(NUM_ROWS):
+                service_dict={}
+                for col in COLS:
+                    service_dict[col] = df[col][row]
+                row = Cert(service_dict['name'], service_dict['name_eng'], str(service_dict['code']), service_dict['ministry'], service_dict['host'], service_dict['majors'], "")
+                db.session.add(row)
+            db.session.commit()
+            db.session.close()
 
     get_certs(SERIESCD)
     add_service_certs()
     # get_certStats(GRADECD, YEARCD)
-    add_military_stats()
-    add_service_stats()
-    uni_schedule()
-    lecture()
+    # add_military_stats()
+    # add_service_stats()
+    # uni_schedule()
+    # lecture()
