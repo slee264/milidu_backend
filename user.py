@@ -57,6 +57,6 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
-    # logout_user()
+    # logout_user() 
     print(current_user.is_authenticated)
     return "logged out"

@@ -23,9 +23,9 @@ def certs():
     data = Cert.getAllCerts()
     certlist = []
     for cert in data:
-        val = {'name': cert.name, 'name_eng': cert.name_eng, 'code': cert.code, 'ministry': cert.ministry, 'host': cert.host, 'majors': cert.related_majors }
+        val = {'name': cert.name, 'name_eng': cert.name_eng, 'code': cert.code, 'ministry': cert.ministry, 'host': cert.host, 'majors': cert.related_majors, 'description': cert.description}
         certlist.append(val)
-    return jsonify(data=certlist, status=200)
+    return jsonify(certlist), 200
 
 @app.route('/cert_stats', methods=['GET'])
 def stats():
@@ -274,3 +274,11 @@ from user import *
     
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='80')
+    
+    
+def remove_overlapped():
+    Certlist = db.session.query(Cert).all()
+    for data in Certlist:
+        for check in Certlist:
+            if data.name == check.name and data.id != check.id:
+                print(data.name)
