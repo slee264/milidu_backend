@@ -45,7 +45,7 @@ def stats():
     else:
         if cert_code is not None:
             if len(cert_code) != 4:
-                return jsonify({'message': "Certification code is 4 digits. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
+                return jsonify({'message': "Certification code is four digits. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
         for digit in cert_code:
             if not digit.isdigit():
                 return jsonify({'message': "Certification code only consists of digits. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
@@ -54,14 +54,15 @@ def stats():
         if cert is None:
             return jsonify({'message': "Certification not found. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
         data = CertStats.getCertStatsByCertId(cert.id)
-    statslist = []
+    cert = Cert.getCertByCode(cert_code)
+    cert_info = {'name': cert.name, 'name_eng': cert.name_eng, 'description': cert.description}
+    stats_list = []
     for stats in data:
-        cert = Cert.getCertByCode(cert_code)
-        val = {'name_eng': cert.name_eng, 'name': stats.name, 'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed, 'description': cert.description}
+        val = {'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed}
         val['pass_rate'] = stats.total_passed * 100 / stats.total_taken if stats.total_taken is not 0 else 0
-        statslist.append(val)
+        stats_list.append(val)
             
-    return jsonify(statslist), 200
+    return jsonify({"cert_info": cert_info, "data": stats_list}), 200
 
 @app.route('/cert_test_schedule', methods=['POST'])
 def schedule():
@@ -69,10 +70,10 @@ def schedule():
 
     if cert_code is not None:
         if len(cert_code) != 4:
-            return jsonify({'message': "Certification code not valid. '.../schedule?cert_code={CERTIFICATION CODE}'"}), 404
+            return jsonify({'message': "Certification code needs to be four digits. '.../schedule?cert_code={CERTIFICATION CODE}'"}), 404
         for digit in cert_code:
             if not digit.isdigit():
-                return jsonify({'message': "Certification code not valid. '.../schedule?cert_code={CERTIFICATION CODE}'"}), 404
+                return jsonify({'message': "Certification code only consists of digits. '.../schedule?cert_code={CERTIFICATION CODE}'"}), 404
     else:
         return jsonify({'message': "Certification not valid. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
     BODY = 1
