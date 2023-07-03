@@ -1,7 +1,6 @@
 import xml.etree.ElementTree as ET
 import requests
 import pandas as pd
-import time
 
 from models import db, Cert, CertStats, UniSchedule, UniLecture
 from config import DB_SERVICE_KEY
@@ -27,7 +26,7 @@ def get_new_lists():
             # f = open("cert_xml_file" + "_" + cd + ".txt", "wb")
             # f.write(cert_xml.content)
             # f.close()
-            # print(cert_xml_root[1][0][0].find('implNm').text)
+            # print(cert_xml_root[1][0][0].find('implNm').ext)
 
             for item in cert_xml_root[BODY][ITEMS]:
                 val = []
@@ -151,9 +150,9 @@ def get_new_lists():
         db.session.commit()
         db.session.close()
     
-    # get_certs(SERIESCD)
-    # add_service_certs()
-    get_certStats(GRADECD, YEARCD)
+    get_certs(SERIESCD)
+    add_service_certs()
+    # get_certStats(GRADECD, YEARCD)
 
 def uni_schedule():
     df = pd.read_excel('excel/23.1 academic calendar.xlsx')

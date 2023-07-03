@@ -354,3 +354,4 @@ class LectureReview(db.Model):
     
     def __repr__(self):
         return f'<LectureReview university = {self.university}, lecturename = {self.lecturename}, username = {self.username}, content = {self.content}, load = {self.load}, grade = {self.grade}>'
+    

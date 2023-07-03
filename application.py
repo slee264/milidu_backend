@@ -255,3 +255,11 @@ from user import *
     
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='80')
+    
+    
+def remove_overlapped():
+    Certlist = db.session.query(Cert).all()
+    for data in Certlist:
+        for check in Certlist:
+            if data.name == check.name and data.id != check.id:
+                print(data.name)
