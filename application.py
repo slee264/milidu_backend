@@ -22,9 +22,18 @@ app.json.ensure_ascii = False
 def certs():
     data = Cert.getAllCerts()
     certlist = []
+    #합격률, 응시자수
     for cert in data:
-        val = {'name': cert.name, 'name_eng': cert.name_eng, 'code': cert.code, 'ministry': cert.ministry, 'host': cert.host, 'majors': cert.related_majors, 'description': cert.description}
+        val = {'id': cert.id, 'name': cert.name, 'code': cert.code, 'majors': cert.related_majors}
         certlist.append(val)
+        
+    for cert in certlist:
+        stat = CertStats.getCertStatsByCertId(cert['id'])
+        if stat:
+            cert['year'] = stat[-1].year
+            cert['total_passed'] = stat[-1].total_passed
+            cert['total_taken'] = stat[-1].total_taken
+    
     return jsonify(certlist), 200
 
 @app.route('/cert_stats', methods=['GET'])
@@ -36,22 +45,21 @@ def stats():
     else:
         if cert_code is not None:
             if len(cert_code) != 4:
-                return jsonify({'message': "Certification code not valid. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
+                return jsonify({'message': "Certification code is 4 digits. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
         for digit in cert_code:
             if not digit.isdigit():
-                return jsonify({'message': "Certification code not valid. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
+                return jsonify({'message': "Certification code only consists of digits. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
+        
         cert = Cert.getCertByCode(cert_code)
         if cert is None:
             return jsonify({'message': "Certification not found. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
         data = CertStats.getCertStatsByCertId(cert.id)
     statslist = []
     for stats in data:
-        if stats.total_taken is not 0:
-            val = {'name': stats.name, 'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed, 'pass_rate': stats.total_passed * 100 / stats.total_taken}
-            statslist.append(val)
-        else:
-            val = {'name': stats.name, 'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed, 'pass_rate': 0}
-            statslist.append(val)
+        cert = Cert.getCertByCode(cert_code)
+        val = {'name_eng': cert.name_eng, 'name': stats.name, 'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed, 'description': cert.description}
+        val['pass_rate'] = stats.total_passed * 100 / stats.total_taken if stats.total_taken is not 0 else 0
+        statslist.append(val)
             
     return jsonify(statslist), 200
 
