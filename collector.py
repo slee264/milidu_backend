@@ -264,7 +264,7 @@ def add_military_stats():
     for row in range(86, NUM_ROWS):
         military_dict={}
         for col in COLS:
-            military_dict[col]=df[col][85]
+            military_dict[col]=df[col][row]
         if military_dict['자격증 종류'] != '계':
             if military_dict['자격증 종목'] == '산업기사':
                 data = CertStats.query.filter(CertStats.name == military_dict['자격증 종류'] + '기사', CertStats.year == '2018').first()
@@ -279,7 +279,23 @@ def add_military_stats():
             db.session.commit()
             db.session.close()
 
-#     row.name = ""
-    
-    # db.session.commit()
-
+def add_service_stats():
+    df = pd.read_excel('excel/test_certs_stats.xlsx', sheet_name = '2-1(서비스)')
+    NUM_ROWS=df.shape[0]
+    NUM_COLS=df.shape[1]
+    COLS = df.columns[:]
+    YEARGROUP = [18, 19, 20, 21, 22]
+    for row in range(NUM_ROWS):
+        service_stats_dict = {}
+        for col in COLS:
+            service_stats_dict[col] = df[col][row]
+        if type(service_stats_dict['종목명']) is str:
+            cert_name = service_stats_dict['종목명']
+        if service_stats_dict['연도'] in YEARGROUP:
+            service_stats_dict['종목명'] = cert_name
+            service_stats_dict['연도'] = '20' + str(service_stats_dict['연도'])
+            data = Cert.query.filter(Cert.name == service_stats_dict['종목명']).first()
+            service_row = CertStats(service_stats_dict['종목명'], int(service_stats_dict['연도']), int(service_stats_dict['응시자']), int(service_stats_dict['합격자']))
+            db.session.add(service_row)
+    db.session.commit()
+    db.session.close()
