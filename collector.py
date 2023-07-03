@@ -176,7 +176,7 @@ def get_new_lists():
         for grcd in gradeCD:
             for yrcd in yearCD:
                 stats_xml_url = 'http://openapi.q-net.or.kr/api/service/rest/InquiryQualPassRateSVC/getList'
-                stats_xml_params ={'serviceKey' : DB_SERVICE_KEY, 'grdCd' : grcd, 'baseYY' : yrcd, 'pageNo' : '1', 'numOfRows' : '1500' }        #7분 소요
+                stats_xml_params ={'serviceKey' : DB_SERVICE_KEY, 'grdCd' : grcd, 'baseYY' : yrcd, 'pageNo' : '1', 'numOfRows' : '1800' }
                 stats_xml = requests.get(stats_xml_url, params=stats_xml_params)
                 stats_xml_root = ET.fromstring(stats_xml.content)
                 for item in stats_xml_root[BODY][ITEMS]:
@@ -232,8 +232,8 @@ def get_new_lists():
 
     get_certs(SERIESCD)
     add_service_certs()
-    # get_certStats(GRADECD, YEARCD)
-    # add_military_stats()
-    # add_service_stats()
-    # uni_schedule()
-    # lecture()
+    get_certStats(GRADECD, YEARCD)
+    add_military_stats()
+    add_service_stats()
+    uni_schedule()
+    lecture()

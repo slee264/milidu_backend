@@ -21,9 +21,9 @@ def certs():
     data = Cert.getAllCerts()
     certlist = []
     for cert in data:
-        val = {'name': cert.name, 'name_eng': cert.name_eng, 'code': cert.code, 'ministry': cert.ministry, 'host': cert.host, 'majors': cert.related_majors }
+        val = {'name': cert.name, 'name_eng': cert.name_eng, 'code': cert.code, 'ministry': cert.ministry, 'host': cert.host, 'majors': cert.related_majors, 'description': cert.description}
         certlist.append(val)
-    return jsonify(data=certlist, status=200)
+    return jsonify(certlist), 200
 
 @app.route('/cert_stats', methods=['GET'])
 def stats():
