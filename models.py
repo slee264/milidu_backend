@@ -207,14 +207,16 @@ class User(UserMixin, db.Model):
             user = User(name, username, pw_hash)
             db.session.add(user)
             db.session.commit()
-            return User.query.filter(User.id == user.id).first()
+            user = User.query.filter(User.id == user.id).first()
+            return {"id": user.id, "name": user.name, "username": user.username}
+            db.session.close()
         return None
 
     def authenticate(username, password):
         user = User.query.filter(User.username == username).first()
         if user and bcrypt.check_password_hash(user.password, password):
             print("user authenticated")
-            return user
+            return {"id": user.id, "name": user.name, "username": user.username}
         return None
 
     def get(user_id):
@@ -255,12 +257,12 @@ class CertReview(db.Model):
         review = CertReview(cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes)
         db.session.add(review)
         db.session.commit()
-        db.session.close()
         
         return CertReview.query.filter(CertReview.id == review.id).first()
+        db.session.close()
     
     def getReviewById(id):
-        return CertReview.query.filter(CertReview.id == review.id).first()
+        return CertReview.query.filter(CertReview.id == id).first()
     
     def getAllReviews():
         return CertReview.query.all()
@@ -304,7 +306,7 @@ class LectureReview(db.Model):
     def __init__(self, school_name, lecture_name, lecture_id, username, content, load, grade, num_likes=0):
         self.school_name = school_name
         self.lecture_name = lecture_name
-        self.lectureid = lecture_id
+        self.lecture_id = lecture_id
         self.username = username
         self.content = content
         self.num_likes = num_likes
@@ -318,8 +320,8 @@ class LectureReview(db.Model):
         review = LectureReview(school_name, lecture_name, lecture_id, username, content, load, grade)
         db.session.add(review)
         db.session.commit()
-        db.session.close()
         return LectureReview.query.filter(LectureReview.id == review.id).first()
+        db.session.close()
     
     def getAllReviews():
         return LectureReview.query.all()
@@ -353,4 +355,4 @@ class LectureReview(db.Model):
     updated_at = db.Column(db.DateTime, nullable = False)
     
     def __repr__(self):
-        return f'<LectureReview university = {self.university}, lecturename = {self.lecturename}, username = {self.username}, content = {self.content}, load = {self.load}, grade = {self.grade}>'
+        return f'<LectureReview university = {self.school_name}, lecturename = {self.lecture_name}, username = {self.username}, content = {self.content}, load = {self.load}, grade = {self.grade}>'

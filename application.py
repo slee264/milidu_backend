@@ -1,11 +1,13 @@
 import os
 from flask import Flask, request, jsonify
 import requests
-from models import bcrypt, db, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview
 import xml.etree.ElementTree as ET
 from flask_login import LoginManager
+
+from models import bcrypt, db, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview
 from config import DB_SERVICE_KEY
 from __init__ import create_app
+from util import serialize
 
 app = create_app()
 
@@ -140,19 +142,23 @@ def schedule():
                         stats?cert_code={CERTIFICATION CODE}'"}), 404
 
 def serialize(schedule_lst):
-        result = []
-        for row in schedule_lst:
-            row_dict = row.__dict__
-            row_dict.pop('_sa_instance_state', None)
-            result.append(row_dict)
-        return result
+        if type(schedule_lst) == list:
+            result = []
+            for row in schedule_lst:
+                row_dict = row.__dict__
+                row_dict.pop('_sa_instance_state', None)
+                result.append(row_dict)
+            return result
+        else:
+            schedule = schedule_lst.__dict__
+            schedule.pop('_sa_instance_state', None)
+            return schedule
     
 @app.route('/get_unischedule', methods=['POST'])
 def get_uni():
-    
     school_name = None
-    if request.is_json and request.get_json()['school_name']:
-        school_name = request.get_json()['school_name']
+    if request.is_json and request.get_json().get('school_name', None):
+        school_name = request.get_json().get('school_name', None)
     
     if school_name is None:
         return jsonify(serialize(UniSchedule.getAllSchedules())), 200
@@ -160,9 +166,8 @@ def get_uni():
     schedule = UniSchedule.getSchedule(school_name)
     
     if schedule:
-        schedule = schedule.__dict__
-        schedule.pop('_sa_instance_state', None)
-        return jsonify(schedule), 200
+        print("hi")
+        return jsonify(serialize(schedule)), 200
 
     schedule = UniSchedule.getSimilarSchoolSchedules(school_name)
     return jsonify(serialize(schedule)), 200
@@ -170,8 +175,8 @@ def get_uni():
 @app.route('/get_lecture', methods=['POST'])
 def get_lecture():
     school_name = None
-    if request.is_json and request.get_json()['school_name']:
-        school_name = request.get_json()['school_name']
+    if request.is_json and request.get_json().get('school_name', None):
+        school_name = request.get_json().get('school_name', None)
         
     if school_name is None:
         return jsonify(serialize(UniLecture.getAllLectures())), 200
@@ -182,74 +187,88 @@ def get_lecture():
 # 앞으로 이름 더 자세하게 지으세요.
 @app.route('/create_cert_review', methods=['POST'])
 def create_cert_review():
-    cert_name = requests.get_json()['certname']
-    cert_id = request.get_json()['cert_id']
-    username = request.get_json()['username']
-    time_taken = request.get_json()['time_taken']
-    difficulty = request.get_json()['difficulty']
-    recommend_book = request.get_json()['recommend_book']
-    num_attempts = request.get_json()['num_attempts']
-    content = request.get_json()['content']
-    num_likes = requests.get_json()['num_likes']
+    if request.is_json:
+        cert_name = request.get_json().get('cert_name', None)
+        cert_id = request.get_json().get('cert_id', None)
+        username = request.get_json().get('username', None)
+        time_taken = request.get_json().get('time_taken', None)
+        difficulty = request.get_json().get('difficulty', None)
+        recommend_book = request.get_json().get('recommend_book', None)
+        num_attempts = request.get_json().get('num_attempts', None)
+        content = request.get_json().get('content', None)
 
-    review = CertReview.create(cert_name, cert_id, username, time_taken, difficulty, 
-                               recommend_book, num_attempts, content, num_likes)
-    
-    if review:
-        return jsonify(review, status=200)
+        if (cert_name and cert_id and username and 
+            time_taken and difficulty and 
+            recommend_book and num_attempts and
+            content):
+            review = CertReview.create(cert_name, cert_id, username, time_taken, difficulty, 
+                               recommend_book, num_attempts, content, None)
+        else:
+            return jsonify("정보 다 입력하세요"), 404
 
-    return jsonify(None, status=500)
+        if review:
+            # review.pop('_sa_instance_state', None)
+            return jsonify(serialize(review)), 200
+    return jsonify("잘못된 요청"), 404
 
 @app.route('/get_cert_review', methods=['POST'])
-def get_review():
+def get_cert_review():
     # 글쓴이, 자격증명. 아무것도 적지 않을시 모든 리뷰 리턴.
-    category = requests.get_json()['category']
-    keyword = requests.get_json()['keyword']
-    
-    if category == '글쓴이':
-        reviews = CertReview.getReviewByUsername(keyword)
-        return jsonify(reviews, status=200)
-    
-    elif category == '자격증명':
-        reviews = CertReview.getReviewByCertName(keyword)
-        return jsonify(reviews, status=200)
-        
-    elif category is None:
-        return jsonify(CertReview.getAllReviews(), status=200)
+    if request.is_json:
+        category = request.get_json().get('category', None)
+        keyword = request.get_json().get('keyword', None)
+        if category == '글쓴이':
+            reviews = CertReview.getReviewByUsername(keyword)
+            return jsonify(serialize(reviews)), 200
+
+        elif category == '자격증명':
+            reviews = CertReview.getReviewByCertName(keyword)
+            return jsonify(serialize(reviews)), 200
+
+        elif category is None:
+            return jsonify(serialize(CertReview.getAllReviews())), 200
+    return jsonify("잘못된 요청"), 404
 
 @app.route('/create_lect_review', methods=['POST'])
 def create_lect_review():
-    school_name = request.get_json()['school_name']
-    lecture_name = request.get_json()['lecture_name']
-    lecture_id = request.get_json()['lecture_id']
-    username = request.get_json()['username']
-    content = request.get_json()['content']
-    num_likes = request.get_json()['num_likes']
-    load = request.get_json()['load']
-    grade = request.get_json()['grade']
-    
-    review = LectureReview.create(school_name, lecture_name, lecture_id, username, content, load, grade)
-    
-    if review:
-        return jsonify(review, status=200)
-    return jsonify(None, status=500)
+    if request.is_json:
+        school_name = request.get_json().get('school_name', None)
+        lecture_name = request.get_json().get('lecture_name', None)
+        lecture_id = request.get_json().get('lecture_id', None)
+        username = request.get_json().get('username', None)
+        content = request.get_json().get('content', None)
+        num_likes = request.get_json().get('num_likes', None)
+        load = request.get_json().get('load', None)
+        grade = request.get_json().get('grade', None)
+
+        if (school_name and lecture_name and lecture_id and username and 
+            content and load and grade):
+            review = LectureReview.create(school_name, lecture_name, lecture_id, username, content, load, grade)
+        else:
+            return jsonify("정보 불충분"), 404
+        if review:
+            return jsonify(serialize(review)), 200
+    return jsonify("잘못된 요청"), 500
 
 @app.route('/get_lect_review', methods=['POST'])
 def get_lect_review():
-    # "글쓴이", "강좌명". 아무것도 적지 않을시 모든 리뷰 리턴.
-    category = requests.get_json()['category']
-    keyword = requests.get_json()['keyword']
-    
-    if category == '글쓴이':
-        reviews = LectureReview.getReviewByUsername(keyword)
-        return jsonify(reviews, status=200)
-    
-    elif category == '강좌명':
-        reviews = LectureReview.getReviewByCertName(keyword)
-        return jsonify(reviews, status=200)
+    print(request.is_json)
+    if request.is_json:
+        # "글쓴이", "강좌명". 아무것도 적지 않을시 모든 리뷰 리턴.
+        category = request.get_json().get('category', None)
+        keyword = request.get_json().get('keyword', None)
+        if category is None or keyword is None:
+            return jsonify(serialize(LectureReview.getAllReviews())), 200
         
-    elif category is None:
-        return jsonify(LectureReview.getAllReviews(), status=200)
+        if category == '글쓴이':
+            reviews = LectureReview.getReviewByUsername(keyword)
+            return jsonify(serialize(reviews)), 200
+
+        if category == '강좌명':
+            reviews = LectureReview.getReviewByCertName(keyword)
+            return jsonify(serialize(reviews)), 200
+
+    return jsonify("잘못된 요청"), 500
     
 from user import *
     
