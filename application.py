@@ -4,6 +4,7 @@ import requests
 import xml.etree.ElementTree as ET
 from flask_login import LoginManager
 
+
 from models import bcrypt, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview
 from config import DB_SERVICE_KEY
 from __init__ import create_app
@@ -48,6 +49,7 @@ def stats():
     if cert_code is None:
         data = CertStats.getAllCertStats()
         cert_info = ""
+        lecture_info = ""
     else:
         if cert_code is not None:
             if len(cert_code) != 4:
@@ -61,14 +63,20 @@ def stats():
             return jsonify({'message': "Certification not found. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
         data = CertStats.getCertStatsByCertId(cert.id)
         cert = Cert.getCertByCode(cert_code)
+        lecture = CertLecture.query.filter(CertLecture.cert_name == cert.name).all()
+        if lecture:
+            for A in lecture:
+                lecture_info = {'lecture_name': A.lecture_name, 'teacher':A.teacher, 'url': A.url}
+        else:
+            lecture_info = ""
         cert_info = {'name': cert.name, 'name_eng': cert.name_eng, 'ministry': cert.ministry, 'host': cert.host, 'description': cert.description}
     stats_list = []
     for stats in data:
-        val = {'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed}
+        val = {'name': stats.name, 'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed}
         val['pass_rate'] = stats.total_passed * 100 / stats.total_taken if stats.total_taken is not 0 else 0
         stats_list.append(val)
             
-    return jsonify({"cert_info": cert_info, "data": stats_list}), 200
+    return jsonify({"cert_info": cert_info, "lecture_info": lecture_info, "data": stats_list}), 200
 
 @app.route('/cert_test_schedule', methods=['POST'])
 def schedule():
