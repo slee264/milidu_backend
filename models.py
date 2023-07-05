@@ -75,7 +75,7 @@ class CertStats(db.Model):
     total_passed_m = db.Column(db.Integer, nullable=True)
     
     def __repr__(self):
-        return f'<CertStats cert_id = {self.cert_id}, CertNAME = {self.name}, CertYEAR = {self.year}, total_taken = {self.total_taken}, total_passed = {self.total_passed}'
+        return f'<CertStats cert_id = {self.cert_id}, CertNAME = {self.name}, CertYEAR = {self.year}, total_taken = {self.total_taken}, total_passed = {self.total_passed}>'
     
 class UniSchedule(db.Model):
     def __init__(self, school_name, reg_dates, sem_start, reg_change_dates, reg_cancel_dates, sem_end_date):
@@ -357,3 +357,24 @@ class LectureReview(db.Model):
     
     def __repr__(self):
         return f'<LectureReview university = {self.school_name}, lecturename = {self.lecture_name}, username = {self.username}, content = {self.content}, load = {self.load}, grade = {self.grade}>'
+    
+class CertLecture(db.Model):
+    def __init__(self, cert_name, lecture_name, teacher, url):
+        self.cert_name = cert_name
+        self.lecture_name = lecture_name
+        self.teacher = teacher
+        self.url = url
+        
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+
+    lecture_name = db.Column(db.String(30), nullable = False)
+    
+    cert_name = db.Column(db.String(30), nullable = False)
+    
+    teacher = db.Column(db.String(30), nullable = False)
+    
+    url = db.Column(db.String(50), nullable = False)
+    
+    def __repr__(self):
+        return f'<CertLecture id = {self.id}, cert_name = {self.cert_name}, lecture_name = {self.lecture_name}, teacher = {self.teacher}, url = {self.url}>'
+    

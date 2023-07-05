@@ -2,8 +2,22 @@ import xml.etree.ElementTree as ET
 import requests
 import pandas as pd
 
-from models import db, Cert, CertStats, UniSchedule, UniLecture
+from models import db, Cert, CertStats, UniSchedule, UniLecture, CertLecture
 from config import DB_SERVICE_KEY
+
+def cert_lecture():
+    df = pd.read_excel('excel/Certs_Lecture.xlsx')
+    NUM_ROWS = df.shape[0]
+    NUM_COLS = df.shape[1]
+    COLS = df.columns[:]
+    for row in range(86, NUM_ROWS):
+        cert_lecture_dict={}
+        for col in COLS:
+            cert_lecture_dict[col]=df[col][row]
+        db_row = CertLecture(cert_lecture_dict['자격증 명'], cert_lecture_dict['강좌 명'], cert_lecture_dict['강사 명'], cert_lecture_dict['URL'])
+        db.session.add(db_row)
+    db.session.commit()
+    db.session.close()
 
 def add_military_stats():
     df = pd.read_excel('excel/Army_Certs_Stats.xlsx')
