@@ -55,7 +55,7 @@ def stats():
             return jsonify({'message': "Certification not found. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
         data = CertStats.getCertStatsByCertId(cert.id)
     cert = Cert.getCertByCode(cert_code)
-    cert_info = {'name': cert.name, 'name_eng': cert.name_eng, 'description': cert.description}
+    cert_info = {'name': cert.name, 'name_eng': cert.name_eng, 'ministry': cert.ministry, 'host': cert.host, 'description': cert.description}
     stats_list = []
     for stats in data:
         val = {'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed}
