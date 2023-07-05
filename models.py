@@ -151,15 +151,16 @@ class UniLecture(Base):
     def __init__(self, univ, lecture, code, prof, credit, lecture_type, max_seats, costs, tuition, reg_start):
         self.univ = univ
         self.lecture = lecture
-        self.code = code
+        self.code = str(code)
         self.prof = prof
-        self.credit = credit if type(credit) is int else credit.item()
+        self.credit = credit
         self.lecture_type = lecture_type
-        self.max_seats = max_seats if type(max_seats) is int else max_seats.item()
-        self.costs = costs if type(costs) is int else costs.item()
-        self.tuition = tuition if type(tuition) is int else tuition.item()
-        reg_start = str(reg_start).strip()
-        self.reg_start = datetime(int(reg_start[:4]), int(reg_start[4:6]), int(reg_start[6:]))
+        self.max_seats = max_seats
+        self.costs = costs
+        self.tuition = tuition
+        # reg_start = str(reg_start).strip()
+        # self.reg_start = datetime(int(reg_start[:4]), int(reg_start[4:6]), int(reg_start[6:]))
+        self.reg_start = reg_start
         
     def getAllLectures():
         return UniLecture.query.all()
@@ -175,7 +176,7 @@ class UniLecture(Base):
     lecture = Column(String(50), nullable = False)
 
     #대학 과정 코드
-    code = Column(Integer, nullable = False)
+    code = Column(String(20), nullable = False)
 
     #교수명
     prof = Column(String(20), nullable = False)
@@ -196,7 +197,7 @@ class UniLecture(Base):
     tuition = Column(Integer, nullable = False)
     
     #수강신청 시작일
-    reg_start = Column(Date, nullable = False)
+    reg_start = Column(String(20), nullable = False)
     
     
     def __repr__(self):
@@ -367,22 +368,23 @@ class LectureReview(Base):
     def __repr__(self):
         return f'<LectureReview university = {self.school_name}, lecturename = {self.lecture_name}, username = {self.username}, content = {self.content}, load = {self.load}, grade = {self.grade}>'
     
-class CertLecture(db.Model):
+class CertLecture(Base):
+    __tablename__ = "cert_lecture"
     def __init__(self, cert_name, lecture_name, teacher, url):
         self.cert_name = cert_name
         self.lecture_name = lecture_name
         self.teacher = teacher
         self.url = url
         
-    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    id = Column(Integer, primary_key = True, autoincrement = True)
 
-    lecture_name = db.Column(db.String(30), nullable = False)
+    lecture_name = Column(String(30), nullable = False)
     
-    cert_name = db.Column(db.String(30), nullable = False)
+    cert_name = Column(String(30), nullable = False)
     
-    teacher = db.Column(db.String(30), nullable = False)
+    teacher = Column(String(30), nullable = False)
     
-    url = db.Column(db.String(50), nullable = False)
+    url = Column(String(50), nullable = False)
     
     def __repr__(self):
         return f'<CertLecture id = {self.id}, cert_name = {self.cert_name}, lecture_name = {self.lecture_name}, teacher = {self.teacher}, url = {self.url}>'

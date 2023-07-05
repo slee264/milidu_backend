@@ -1,8 +1,11 @@
 import xml.etree.ElementTree as ET
 import requests
 import pandas as pd
+import numpy as np
+from psycopg2.extensions import register_adapter, AsIs
+register_adapter(np.int64, AsIs)
 
-from models import db, Cert, CertStats, UniSchedule, UniLecture, CertLecture
+from models import Cert, CertStats, UniSchedule, UniLecture, CertLecture
 from config import DB_SERVICE_KEY
 from database import db_session
 
@@ -16,9 +19,9 @@ def cert_lecture():
         for col in COLS:
             cert_lecture_dict[col]=df[col][row]
         db_row = CertLecture(cert_lecture_dict['자격증 명'], cert_lecture_dict['강좌 명'], cert_lecture_dict['강사 명'], cert_lecture_dict['URL'])
-        db.session.add(db_row)
-    db.session.commit()
-    db.session.close()
+        db_session.add(db_row)
+    db_session.commit()
+    db_session.close()
 
 def add_military_stats():
     df = pd.read_excel('excel/Army_Certs_Stats.xlsx')
@@ -240,15 +243,17 @@ def get_new_lists():
                 service_dict={}
                 for col in COLS:
                     service_dict[col] = df[col][row]
-                row = Cert(service_dict['name'], service_dict['name_eng'], str(service_dict['code']), service_dict['ministry'], service_dict['host'], service_dict['majors'], "")
+                row = Cert(service_dict['name'], service_dict['name_eng'], str(service_dict['code']), service_dict['ministry'], service_dict['host'], service_dict['majors'], '')
+                if row.name == '전자상거래운용사':
+                    continue
                 db_session.add(row)
             db_session.commit()
             db_session.close()
 
-    get_certs(SERIESCD)
-    add_service_certs()
-    get_certStats(GRADECD, YEARCD)
-    add_military_stats()
-    add_service_stats()
-    uni_schedule()
+    # get_certs(SERIESCD)
+    # add_service_certs()
+    # get_certStats(GRADECD, YEARCD)
+    # add_military_stats()
+    # add_service_stats()
+    # uni_schedule()
     lecture()
