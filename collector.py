@@ -238,22 +238,20 @@ def get_new_lists():
             df = pd.read_excel('excel/service_Certs.xlsx')
             NUM_ROWS = df.shape[0]
             NUM_COLS = df.shape[1]
-            COLS = df.columns[:]
+            COLS = df.columns
             for row in range(NUM_ROWS):
                 service_dict={}
                 for col in COLS:
                     service_dict[col] = df[col][row]
-                row = Cert(service_dict['name'], service_dict['name_eng'], str(service_dict['code']), service_dict['ministry'], service_dict['host'], service_dict['majors'], '')
-                if row.name == '전자상거래운용사':
-                    continue
+                row = Cert(service_dict['name'], service_dict['name_eng'] if type(service_dict['name_eng']) is str else "", str(service_dict['code']), service_dict['ministry'], service_dict['host'], service_dict['majors'], '')
                 db_session.add(row)
             db_session.commit()
             db_session.close()
 
-    # get_certs(SERIESCD)
-    # add_service_certs()
-    # get_certStats(GRADECD, YEARCD)
-    # add_military_stats()
-    # add_service_stats()
-    # uni_schedule()
+    get_certs(SERIESCD)
+    add_service_certs()
+    get_certStats(GRADECD, YEARCD)
+    add_military_stats()
+    add_service_stats()
+    uni_schedule()
     lecture()
