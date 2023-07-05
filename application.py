@@ -42,6 +42,7 @@ def stats():
     data = None
     if cert_code is None:
         data = CertStats.getAllCertStats()
+        cert_info = ""
     else:
         if cert_code is not None:
             if len(cert_code) != 4:
@@ -54,8 +55,8 @@ def stats():
         if cert is None:
             return jsonify({'message': "Certification not found. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
         data = CertStats.getCertStatsByCertId(cert.id)
-    cert = Cert.getCertByCode(cert_code)
-    cert_info = {'name': cert.name, 'name_eng': cert.name_eng, 'ministry': cert.ministry, 'host': cert.host, 'description': cert.description}
+        cert = Cert.getCertByCode(cert_code)
+        cert_info = {'name': cert.name, 'name_eng': cert.name_eng, 'ministry': cert.ministry, 'host': cert.host, 'description': cert.description}
     stats_list = []
     for stats in data:
         val = {'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed}
@@ -250,7 +251,7 @@ def create_lect_review():
         load = request.get_json().get('load', None)
         grade = request.get_json().get('grade', None)
 
-        if (school_name and lecture_name and lecture_id and username and 
+        if (school_name and lecture_name and lecture_id and username and
             content and load and grade):
             review = LectureReview.create(school_name, lecture_name, lecture_id, username, content, load, grade)
         else:
