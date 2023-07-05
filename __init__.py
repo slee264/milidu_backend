@@ -7,7 +7,7 @@ def create_app(test_config=None):
     basedir = os.path.abspath(os.path.dirname(__file__))
     app.config.from_mapping(
         SECRET_KEY = SECRET_KEY,
-        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'database.db')
+        # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'database.db')
     )
     
     # if test_config is None:

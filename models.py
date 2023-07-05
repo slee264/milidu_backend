@@ -3,11 +3,15 @@ from pytz import timezone
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from sqlalchemy import Date, Column, Integer, String, Text, DateTime, ForeignKey
 
-db = SQLAlchemy()
+from database import Base, db_session
+
+
 bcrypt = Bcrypt()
 
-class Cert(db.Model):
+class Cert(Base):
+    __tablename__ = "cert"
     def __init__(self, name, name_eng, code, ministry, host, related_majors, description):
         self.name = name
         self.name_eng = name_eng
@@ -23,26 +27,27 @@ class Cert(db.Model):
     def getCertByCode(cert_code):
         return Cert.query.filter(Cert.code == cert_code).first()
     
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     # 자격증명
-    name = db.Column(db.String(100), nullable=True)
+    name = Column(String(100), nullable=True)
     # 영문명
-    name_eng = db.Column(db.String(100), nullable=True)
+    name_eng = Column(String(100), nullable=True)
     # 자격증 코드
-    code = db.Column(db.String(4), nullable=True)
+    code = Column(String(4), nullable=True)
     # 시험부처
-    ministry = db.Column(db.String(100), nullable=True)
+    ministry = Column(String(100), nullable=True)
     # 주관기관
-    host = db.Column(db.String(100), nullable=True)
+    host = Column(String(100), nullable=True)
     # 관련 전공
-    related_majors = db.Column(db.String(100), nullable=True)
+    related_majors = Column(String(100), nullable=True)
     # 자격증 설명 optional
-    description = db.Column(db.Text, nullable=True)
+    description = Column(Text, nullable=True)
     
     def __repr__(self):
         return f'<Certificate id = {self.id}, name = {self.name}, name_eng = {self.name_eng}, code = {self.code}, ministry = {self.ministry}, host = {self.host}, majors = {self.related_majors}>'
     
-class CertStats(db.Model):
+class CertStats(Base):
+    __tablename__ = "cert_stats"
     def __init__(self, name, year, total_taken, total_passed):
         obj = Cert.query.filter(Cert.name == name).first()
         if obj is not None:
@@ -58,26 +63,27 @@ class CertStats(db.Model):
     def getCertStatsByCertId(cert_id):
         return CertStats.query.filter(CertStats.cert_id == cert_id).all()
     
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     # 자격증 id
-    cert_id = db.Column(db.Integer, db.ForeignKey('cert.id'), nullable=True)
+    cert_id = Column(Integer, ForeignKey('cert.id'), nullable=True)
     # 자격증 이름
-    name = db.Column(db.String(50), nullable=False)
+    name = Column(String(50), nullable=False)
     # 응시 년도
-    year = db.Column(db.Integer, nullable=False)
+    year = Column(Integer, nullable=False)
     # 총 응시자수
-    total_taken = db.Column(db.Integer, nullable=True)
+    total_taken = Column(Integer, nullable=True)
     # 총 합격자수
-    total_passed = db.Column(db.Integer, nullable=True)
+    total_passed = Column(Integer, nullable=True)
     # 군장병 응시자 수
-    total_taken_m = db.Column(db.Integer, nullable=True)
+    total_taken_m = Column(Integer, nullable=True)
     # 군장병 합격자 수
-    total_passed_m = db.Column(db.Integer, nullable=True)
+    total_passed_m = Column(Integer, nullable=True)
     
     def __repr__(self):
         return f'<CertStats cert_id = {self.cert_id}, CertNAME = {self.name}, CertYEAR = {self.year}, total_taken = {self.total_taken}, total_passed = {self.total_passed}'
     
-class UniSchedule(db.Model):
+class UniSchedule(Base):
+    __tablename__ = "uni_schedule"
     def __init__(self, school_name, reg_dates, sem_start, reg_change_dates, reg_cancel_dates, sem_end_date):
         self.school_name = school_name
         
@@ -109,38 +115,39 @@ class UniSchedule(db.Model):
     
     def getSimilarSchoolSchedules(school_name):
         return UniSchedule.query.filter(UniSchedule.school_name.contains(school_name)).all()
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
         
     # 학교명
-    school_name = db.Column(db.String(20), nullable=False)
+    school_name = Column(String(20), nullable=False)
     
     # 수강신청시작
-    reg_start = db.Column(db.Date, nullable=False)
+    reg_start = Column(Date, nullable=False)
     # 수강신청마감일
-    reg_end = db.Column(db.Date, nullable=False)
+    reg_end = Column(Date, nullable=False)
     
     # 개강일
-    sem_start = db.Column(db.Date, nullable=False)
+    sem_start = Column(Date, nullable=False)
     
     # 수강신청정정시작
-    reg_change_start = db.Column(db.Date, nullable=False)
+    reg_change_start = Column(Date, nullable=False)
     # 수강신청정정마감
-    reg_change_end = db.Column(db.Date, nullable=False)
+    reg_change_end = Column(Date, nullable=False)
     
     # 수강철회시작
-    reg_cancel_start = db.Column(db.Date, nullable=False)
+    reg_cancel_start = Column(Date, nullable=False)
     # 수강철회마감
-    reg_cancel_end = db.Column(db.Date, nullable=False)
+    reg_cancel_end = Column(Date, nullable=False)
     
     # 종강일
-    sem_end = db.Column(db.Date, nullable=False)
+    sem_end = Column(Date, nullable=False)
     
     def __repr__(self):
         return f'< id = {self.id}, UniSchedule school_name = {self.school_name}, reg_start = {self.reg_start}, reg_end = {self.reg_end}, sem_start = {self.sem_start}, \
         reg_change_start = {self.reg_change_start}, reg_change_end = {self.reg_change_end}, reg_cancel_start = {self.reg_cancel_start}, reg_cancel_end = {self.reg_cancel_end}, \
         sem_end = {self.sem_end}>'
     
-class UniLecture(db.Model):
+class UniLecture(Base):
+    __tablename__ = "uni_lecture"
     def __init__(self, univ, lecture, code, prof, credit, lecture_type, max_seats, costs, tuition, reg_start):
         self.univ = univ
         self.lecture = lecture
@@ -159,44 +166,44 @@ class UniLecture(db.Model):
     
     def getLectures(school_name):
         return UniLecture.query.filter(UniLecture.univ == school_name).all()
-    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    id = Column(Integer, primary_key = True, autoincrement = True)
 
     #학교명
-    univ = db.Column(db.String(20), nullable = False)
+    univ = Column(String(20), nullable = False)
 
     #강좌명
-    lecture = db.Column(db.String(50), nullable = False)
+    lecture = Column(String(50), nullable = False)
 
     #대학 과정 코드
-    code = db.Column(db.Integer, nullable = False)
+    code = Column(Integer, nullable = False)
 
     #교수명
-    prof = db.Column(db.String(20), nullable = False)
+    prof = Column(String(20), nullable = False)
     
     #학점
-    credit = db.Column(db.Integer, nullable = False)
+    credit = Column(Integer, nullable = False)
     
     #강좌이수구분
-    lecture_type = db.Column(db.String(10), nullable = False)
+    lecture_type = Column(String(10), nullable = False)
     
     #강좌 인원
-    max_seats = db.Column(db.Integer, nullable = False)
+    max_seats = Column(Integer, nullable = False)
     
     #비용
-    costs = db.Column(db.Integer, nullable = False)
+    costs = Column(Integer, nullable = False)
     
     #수강료
-    tuition = db.Column(db.Integer, nullable = False)
+    tuition = Column(Integer, nullable = False)
     
     #수강신청 시작일
-    reg_start = db.Column(db.Date, nullable = False)
+    reg_start = Column(Date, nullable = False)
     
     
     def __repr__(self):
         return f'<UniLecture univ_name = {self.univ}, lecture = {self.lecture}, professor = {self.prof}, credit = {self.credit}, reg_start = {self.reg_start}>'
 
-class User(UserMixin, db.Model):
-
+class User(UserMixin, Base):
+    __tablename__ = "users"
     def __init__(self, name, username, pw):
         self.name = name
         self.username = username
@@ -206,11 +213,11 @@ class User(UserMixin, db.Model):
         if not User.query.filter(User.name == name).first():
             pw_hash = bcrypt.generate_password_hash(password)
             user = User(name, username, pw_hash)
-            db.session.add(user)
-            db.session.commit()
+            db_session.add(user)
+            db_session.commit()
             user = User.query.filter(User.id == user.id).first()
             return {"id": user.id, "name": user.name, "username": user.username}
-            db.session.close()
+            db_session.close()
         return None
 
     def authenticate(username, password):
@@ -224,21 +231,22 @@ class User(UserMixin, db.Model):
         user = User.query.filter(User.id == user_id).first()
         return user
 
-    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    id = Column(Integer, primary_key = True, autoincrement = True)
 
     #유저 이름
-    name = db.Column(db.String(20), nullable = False)
+    name = Column(String(20), nullable = False)
 
     #유저 ID
-    username = db.Column(db.String(20), nullable = False)
+    username = Column(String(20), nullable = False)
 
     #유저 비밀번호
-    password = db.Column(db.String(20), nullable = False)
+    password = Column(Text, nullable = False)
 
     def __repr__(self):
         return f'<User name = {self.name}, username = {self.username}>'
     
-class CertReview(db.Model):
+class CertReview(Base):
+    __tablename__ = "cert_review"
     def __init__(self, cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes=0):
         
         self.cert_name = cert_name
@@ -256,11 +264,11 @@ class CertReview(db.Model):
         
     def create(cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes):
         review = CertReview(cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes)
-        db.session.add(review)
-        db.session.commit()
+        db_session.add(review)
+        db_session.commit()
         
         return CertReview.query.filter(CertReview.id == review.id).first()
-        db.session.close()
+        db_session.close()
     
     def getReviewById(id):
         return CertReview.query.filter(CertReview.id == id).first()
@@ -274,36 +282,37 @@ class CertReview(db.Model):
     def getReviewByUsername(username):
         return CertReview.query.filter(CertReview.username == username).all()
         
-    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    id = Column(Integer, primary_key = True, autoincrement = True)
     # 자격증 이름
-    cert_name = db.Column(db.String(20), nullable = False)
+    cert_name = Column(String(20), nullable = False)
     # 자격증 코드
-    cert_id = db.Column(db.Integer, db.ForeignKey('cert.id'), nullable = False)
+    cert_id = Column(Integer, ForeignKey('cert.id'), nullable = False)
     # 유저 ID
-    username = db.Column(db.String(20), nullable = False)
+    username = Column(String(20), nullable = False)
     # 리뷰 내용
-    content = db.Column(db.Text, nullable = True)
+    content = Column(Text, nullable = True)
     #소요 시간
-    time_taken = db.Column(db.String(20), nullable = False)
+    time_taken = Column(String(20), nullable = False)
     #좋아요 수
-    num_likes = db.Column(db.Integer, nullable = True)
+    num_likes = Column(Integer, nullable = True)
     #난이도
-    difficulty = db.Column(db.Integer, nullable = False)
+    difficulty = Column(Integer, nullable = False)
     #추천 도서
-    recommend_book = db.Column(db.String(50), nullable = True)
+    recommend_book = Column(String(50), nullable = True)
     #시도 횟수
-    num_attempts = db.Column(db.Integer, nullable = False)
+    num_attempts = Column(Integer, nullable = False)
     #리뷰 쓰여진 시간+날짜
-    created_at = db.Column(db.DateTime, nullable = False)
+    created_at = Column(DateTime, nullable = False)
     #리뷰 업데이트 된 날짜
-    updated_at = db.Column(db.DateTime, nullable = False)
+    updated_at = Column(DateTime, nullable = False)
     
     def __repr__(self):
         return f'<CertReview cert_name = {self.cert_name}, username = {self.username},\
  time_taken = {self.time_taken}, difficulty = {self.difficulty}, num_attempts = {self.num_attempts}, \
  num_likes = {self.num_likes}, content = {self.content}>'
     
-class LectureReview(db.Model):
+class LectureReview(Base):
+    __tablename__ = "lecture_review"
     def __init__(self, school_name, lecture_name, lecture_id, username, content, load, grade, num_likes=0):
         self.school_name = school_name
         self.lecture_name = lecture_name
@@ -319,10 +328,10 @@ class LectureReview(db.Model):
 
     def create(school_name, lecture_name, lecture_id, username, content, load, grade):
         review = LectureReview(school_name, lecture_name, lecture_id, username, content, load, grade)
-        db.session.add(review)
-        db.session.commit()
+        db_session.add(review)
+        db_session.commit()
         return LectureReview.query.filter(LectureReview.id == review.id).first()
-        db.session.close()
+        db_session.close()
     
     def getAllReviews():
         return LectureReview.query.all()
@@ -333,27 +342,27 @@ class LectureReview(db.Model):
     def getReviewByUsername(username):
         return LectureReview.query.filter(LectureReview.username == username).all()
     
-    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    id = Column(Integer, primary_key = True, autoincrement = True)
     #대학교 이름
-    school_name = db.Column(db.String(20), nullable = False)
+    school_name = Column(String(20), nullable = False)
     #강좌 이름
-    lecture_name = db.Column(db.String(20), nullable = False)
+    lecture_name = Column(String(20), nullable = False)
     #강좌 ID
-    lecture_id = db.Column(db.Integer, db.ForeignKey('uni_lecture.id'), nullable = False)
+    lecture_id = Column(Integer, ForeignKey('uni_lecture.id'), nullable = False)
     #유저 ID
-    username = db.Column(db.String(20), nullable = False)
+    username = Column(String(20), nullable = False)
     #리뷰 내용
-    content = db.Column(db.Text, nullable = True)
+    content = Column(Text, nullable = True)
     #좋아요 수
-    num_likes = db.Column(db.Integer, nullable = True)
+    num_likes = Column(Integer, nullable = True)
     #과제
-    load = db.Column(db.String(20), nullable = False)
+    load = Column(String(20), nullable = False)
     #학점
-    grade = db.Column(db.String(10), nullable = False)
+    grade = Column(String(10), nullable = False)
     #리뷰 쓰여진 시간+날짜
-    created_at = db.Column(db.DateTime, nullable = False)
+    created_at = Column(DateTime, nullable = False)
     #리뷰 업데이트 된 날짜
-    updated_at = db.Column(db.DateTime, nullable = False)
+    updated_at = Column(DateTime, nullable = False)
     
     def __repr__(self):
         return f'<LectureReview university = {self.school_name}, lecturename = {self.lecture_name}, username = {self.username}, content = {self.content}, load = {self.load}, grade = {self.grade}>'

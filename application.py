@@ -4,19 +4,24 @@ import requests
 import xml.etree.ElementTree as ET
 from flask_login import LoginManager
 
-from models import bcrypt, db, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview
+from models import bcrypt, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview
 from config import DB_SERVICE_KEY
 from __init__ import create_app
 from util import serialize
+from database import db_session
 
 app = create_app()
 
-db.init_app(app)
+# db.init_app(app)
 bcrypt.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.json.ensure_ascii = False
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
 
 @app.route('/certs', methods=['GET'])
 def certs():
@@ -280,15 +285,14 @@ def get_lect_review():
 
     return jsonify("잘못된 요청"), 500
     
-from user import *
-    
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port='80')
-    
-    
 def remove_overlapped():
-    Certlist = db.session.query(Cert).all()
+    Certlist = Cert.getAllCerts()
     for data in Certlist:
         for check in Certlist:
             if data.name == check.name and data.id != check.id:
                 print(data.name)
+                
+from user import *
+    
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port='80')

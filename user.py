@@ -1,4 +1,4 @@
-from application import app, request, login_manager, db, jsonify
+from application import app, request, login_manager, jsonify
 from flask_login import login_required, login_user, current_user, logout_user
 
 from models import User

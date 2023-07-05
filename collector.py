@@ -4,6 +4,7 @@ import pandas as pd
 
 from models import db, Cert, CertStats, UniSchedule, UniLecture
 from config import DB_SERVICE_KEY
+from database import db_session
 
 def add_military_stats():
     df = pd.read_excel('excel/Army_Certs_Stats.xlsx')
@@ -25,8 +26,8 @@ def add_military_stats():
                 if data:
                     data.total_taken_m = int(military_dict['응시'])
                     data.total_passed_m = int(military_dict['합격'])
-            db.session.commit()
-            db.session.close()
+            db_session.commit()
+            db_session.close()
 
 def add_service_stats():
     df = pd.read_excel('excel/test_certs_stats.xlsx', sheet_name = '2-1(서비스)')
@@ -45,9 +46,9 @@ def add_service_stats():
             service_stats_dict['연도'] = '20' + str(service_stats_dict['연도'])
             data = Cert.query.filter(Cert.name == service_stats_dict['종목명']).first()
             service_row = CertStats(service_stats_dict['종목명'], int(service_stats_dict['연도']), int(service_stats_dict['응시자']), int(service_stats_dict['합격자']))
-            db.session.add(service_row)
-    db.session.commit()
-    db.session.close()
+            db_session.add(service_row)
+    db_session.commit()
+    db_session.close()
 
 def uni_schedule():
     df = pd.read_excel('excel/23.1 academic calendar.xlsx')
@@ -58,9 +59,9 @@ def uni_schedule():
         for col in COLS:
             cal_dict[col] = df[col][row]
         db_row = UniSchedule(cal_dict['대학'], cal_dict['수강 신청일'], cal_dict['개강일'], cal_dict['수강신청 정정일'], cal_dict['수강 철회일'], cal_dict['종강일'])
-        db.session.add(db_row)
-    db.session.commit()
-    db.session.close()
+        db_session.add(db_row)
+    db_session.commit()
+    db_session.close()
 
     return 'testing'
 
@@ -77,9 +78,9 @@ def lecture():
         db_row = UniLecture(lecture_dict['수강대학'], lecture_dict['강좌명'], lecture_dict['대학과정코드'], lecture_dict['교수명'], lecture_dict['학점'],
                             lecture_dict['강좌이수구분'] if type(lecture_dict['강좌이수구분']) is str else "#N/A", lecture_dict['강좌정원'], 
                             lecture_dict['비용'], lecture_dict['수강료'], lecture_dict['신청시작일'])
-        db.session.add(db_row)
-    db.session.commit()
-    db.session.close()
+        db_session.add(db_row)
+    db_session.commit()
+    db_session.close()
     return 'lectures!'
 
 
@@ -167,9 +168,9 @@ def get_new_lists():
             for major in item[1][5]:
                 major_list_str += major + ", "
             row = Cert(item[0], item[1][0], item[1][1], item[1][2], item[1][3], major_list_str[:-2], item[1][4])
-            db.session.add(row)
-        db.session.commit()
-        db.session.close()
+            db_session.add(row)
+        db_session.commit()
+        db_session.close()
 
     def get_certStats(gradeCD: [str], yearCD: [str]):
         stats_dict = {}
@@ -212,9 +213,9 @@ def get_new_lists():
             item = list(item)
             for data in item[1]:
                 row = CertStats(item[0], data[0], data[1], data[2])
-                db.session.add(row)
-        db.session.commit()
-        db.session.close()
+                db_session.add(row)
+        db_session.commit()
+        db_session.close()
 
     def add_service_certs():
             df = pd.read_excel('excel/service_Certs.xlsx')
@@ -226,9 +227,9 @@ def get_new_lists():
                 for col in COLS:
                     service_dict[col] = df[col][row]
                 row = Cert(service_dict['name'], service_dict['name_eng'], str(service_dict['code']), service_dict['ministry'], service_dict['host'], service_dict['majors'], "")
-                db.session.add(row)
-            db.session.commit()
-            db.session.close()
+                db_session.add(row)
+            db_session.commit()
+            db_session.close()
 
     get_certs(SERIESCD)
     add_service_certs()
