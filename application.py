@@ -226,7 +226,7 @@ def create_cert_review():
         num_attempts = request.get_json().get('num_attempts', None)
         content = request.get_json().get('content', None)
         study_method = request.get_json().get('study_method', None)
-        print(cert_name + '/' + content)
+
         if (cert_name and cert_code and username and 
             time_taken and difficulty and 
             recommend_book and num_attempts and
@@ -252,9 +252,32 @@ def get_cert_review():
             reviews = CertReview.getReviewByUsername(keyword)
             return jsonify(serialize(reviews)), 200
 
-        elif category == '자격증명':
+        elif category == '자격증코드':
+            COUNT = 0
+            total_sum_difficulty = 0
+            total_sum_num_attempts = 0
+            total_sum_time_taken = 0
             reviews = CertReview.getReviewByCertCode(keyword)
-            return jsonify(serialize(reviews)), 200
+            for data in reviews:
+                whole_time = data.time_taken
+                step1 = whole_time.split('년')
+                year = step1.pop(0)
+                step2 = step1[0].split('개월')
+                month = step2.pop(0)
+                step3 = step2[0].split('주')
+                week = step3.pop(0)
+                total_week = 52 * int(year) + 4 * int(month) + int(week)
+                COUNT += 1
+                total_sum_difficulty += data.difficulty
+                total_sum_num_attempts += data.num_attempts
+                total_sum_time_taken += total_week
+            if COUNT is not 0:
+                average_difficulty = total_sum_difficulty / COUNT
+                average_num_attempts = total_sum_num_attempts / COUNT
+                average_time_taken = total_sum_time_taken / COUNT
+            else:
+                return jsonify(serialize(reviews)), 200
+            return jsonify({'ReviewList' : serialize(reviews), 'average_difficulty' : average_difficulty, 'average_num_attempts' : average_num_attempts, 'average_time_taken' : (average_time_taken - average_time_taken % 4)/4}), 200
 
         elif category is None:
             return jsonify(serialize(CertReview.getAllReviews())), 200
