@@ -63,16 +63,16 @@ def stats():
             return jsonify({'message': "Certification not found. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
         data = CertStats.getCertStatsByCertId(cert.id)
         cert = Cert.getCertByCode(cert_code)
-        lecture = CertLecture.query.filter(CertLecture.cert_name == cert.name).all()
+        info = CertLecture.query.filter(CertLecture.cert_name == cert.name).all()
         if lecture:
-            for A in lecture:
-                lecture_info = {'lecture_name': A.lecture_name, 'teacher':A.teacher, 'url': A.url}
+            for lecture in info:
+                lecture_info = {'lecture_name': lecture.lecture_name, 'teacher':lecture.teacher, 'url': lecture.url}
         else:
             lecture_info = ""
         cert_info = {'name': cert.name, 'name_eng': cert.name_eng, 'ministry': cert.ministry, 'host': cert.host, 'description': cert.description}
     stats_list = []
     for stats in data:
-        val = {'name': stats.name, 'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed}
+        val = {'name': stats.name, 'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed, 'military_taken': stats.total_taken_m, 'military_passed': stats.total_passed_m}
         val['pass_rate'] = stats.total_passed * 100 / stats.total_taken if stats.total_taken is not 0 else 0
         stats_list.append(val)
             
@@ -216,7 +216,7 @@ def get_lecture():
 def create_cert_review():
     if request.is_json:
         cert_name = request.get_json().get('cert_name', None)
-        cert_id = request.get_json().get('cert_id', None)
+        cert_code = request.get_json().get('cert_code', None)
         username = request.get_json().get('username', None)
         time_taken = request.get_json().get('time_taken', None)
         difficulty = request.get_json().get('difficulty', None)
@@ -224,11 +224,11 @@ def create_cert_review():
         num_attempts = request.get_json().get('num_attempts', None)
         content = request.get_json().get('content', None)
 
-        if (cert_name and cert_id and username and 
+        if (cert_name and cert_code and username and 
             time_taken and difficulty and 
             recommend_book and num_attempts and
             content):
-            review = CertReview.create(cert_name, cert_id, username, time_taken, difficulty, 
+            review = CertReview.create(cert_name, cert_code, username, time_taken, difficulty, 
                                recommend_book, num_attempts, content, None)
         else:
             return jsonify("정보 다 입력하세요"), 404
