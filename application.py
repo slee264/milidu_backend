@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 from flask_login import LoginManager
 
 
-from models import bcrypt, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview
+from models import bcrypt, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview, CertLecture
 from config import DB_SERVICE_KEY
 from __init__ import create_app
 from util import serialize
@@ -64,9 +64,11 @@ def stats():
         data = CertStats.getCertStatsByCertId(cert.id)
         cert = Cert.getCertByCode(cert_code)
         info = CertLecture.query.filter(CertLecture.cert_name == cert.name).all()
-        if lecture:
+        lecture_list = []
+        if info:
             for lecture in info:
                 lecture_info = {'lecture_name': lecture.lecture_name, 'teacher':lecture.teacher, 'url': lecture.url}
+                lecture_list.append(lecture_info)
         else:
             lecture_info = ""
         cert_info = {'name': cert.name, 'name_eng': cert.name_eng, 'ministry': cert.ministry, 'host': cert.host, 'description': cert.description}
@@ -76,7 +78,7 @@ def stats():
         val['pass_rate'] = stats.total_passed * 100 / stats.total_taken if stats.total_taken is not 0 else 0
         stats_list.append(val)
             
-    return jsonify({"cert_info": cert_info, "lecture_info": lecture_info, "data": stats_list}), 200
+    return jsonify({"cert_info": cert_info, "lecture_info": lecture_list, "data": stats_list}), 200
 
 @app.route('/cert_test_schedule', methods=['POST'])
 def schedule():
@@ -223,13 +225,14 @@ def create_cert_review():
         recommend_book = request.get_json().get('recommend_book', None)
         num_attempts = request.get_json().get('num_attempts', None)
         content = request.get_json().get('content', None)
-
+        study_method = request.get_json().get('study_method', None)
+        print(cert_name + '/' + content)
         if (cert_name and cert_code and username and 
             time_taken and difficulty and 
             recommend_book and num_attempts and
-            content):
+            content and study_method):
             review = CertReview.create(cert_name, cert_code, username, time_taken, difficulty, 
-                               recommend_book, num_attempts, content, None)
+                               recommend_book, num_attempts, content, study_method, None)
         else:
             return jsonify("정보 다 입력하세요"), 404
 
@@ -237,6 +240,7 @@ def create_cert_review():
             # review.pop('_sa_instance_state', None)
             return jsonify(serialize(review)), 200
     return jsonify("잘못된 요청"), 404
+
 
 @app.route('/get_cert_review', methods=['POST'])
 def get_cert_review():
@@ -249,7 +253,7 @@ def get_cert_review():
             return jsonify(serialize(reviews)), 200
 
         elif category == '자격증명':
-            reviews = CertReview.getReviewByCertName(keyword)
+            reviews = CertReview.getReviewByCertCode(keyword)
             return jsonify(serialize(reviews)), 200
 
         elif category is None:
