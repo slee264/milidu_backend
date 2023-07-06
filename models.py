@@ -378,13 +378,13 @@ class CertLecture(Base):
         
     id = Column(Integer, primary_key = True, autoincrement = True)
 
-    lecture_name = Column(String(30), nullable = False)
+    lecture_name = Column(String(50), nullable = False)
     
-    cert_name = Column(String(30), nullable = False)
+    cert_name = Column(String(50), nullable = False)
     
     teacher = Column(String(30), nullable = False)
     
-    url = Column(String(50), nullable = False)
+    url = Column(String(100), nullable = False)
     
     def __repr__(self):
         return f'<CertLecture id = {self.id}, cert_name = {self.cert_name}, lecture_name = {self.lecture_name}, teacher = {self.teacher}, url = {self.url}>'

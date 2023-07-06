@@ -69,10 +69,10 @@ def cert_lecture():
     NUM_ROWS = df.shape[0]
     NUM_COLS = df.shape[1]
     COLS = df.columns[:]
-    for row in range(86, NUM_ROWS):
+    for row in range(NUM_ROWS):
         cert_lecture_dict={}
         for col in COLS:
-            cert_lecture_dict[col]=df[col][row]
+            cert_lecture_dict[col] = df[col][row]
         db_row = CertLecture(cert_lecture_dict['자격증 명'], cert_lecture_dict['강좌 명'], cert_lecture_dict['강사 명'], cert_lecture_dict['URL'])
         db_session.add(db_row)
     db_session.commit()
@@ -310,3 +310,6 @@ def get_new_lists():
     add_service_stats()
     uni_schedule()
     lecture()
+    add_more_military_stats_engineer()
+    add_more_military_stats_craftsman()
+    cert_lecture()
