@@ -177,14 +177,18 @@ def serialize(schedule_lst):
             schedule.pop('_sa_instance_state', None)
             return schedule
     
-@app.route('/get_unischedule', methods=['POST'])
+@app.route('/get_unischedule', methods=['GET'])
 def get_uni():
     school_name = None
     if request.is_json and request.get_json().get('school_name', None):
         school_name = request.get_json().get('school_name', None)
     
     if school_name is None:
-        return jsonify(serialize(UniSchedule.getAllSchedules())), 200
+        all_information = UniSchedule.getAllSchedules()
+        school_name_list = []
+        for school in all_information:
+            school_name_list.append(school.school_name)
+        return jsonify(school_name_list), 200
 
     schedule = UniSchedule.getSchedule(school_name)
     
