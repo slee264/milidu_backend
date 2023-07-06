@@ -9,6 +9,61 @@ from models import Cert, CertStats, UniSchedule, UniLecture, CertLecture
 from config import DB_SERVICE_KEY
 from database import db_session
 
+def add_more_military_stats_engineer():
+    df = pd.read_excel('excel/More_Detailed_Military_Stats.xlsx', sheet_name = '산업기사')
+    NUM_ROWS = df.shape[0]
+    NUM_COLS = df.shape[1]
+    COLS = df.columns[:]
+    YEARGROUP = [18, 19, 20, 21, 22]
+    for row in range(NUM_ROWS):
+        detailed_military_stats={}
+        for col in COLS:
+            detailed_military_stats[col] = df[col][row]
+        if detailed_military_stats['종목'] != '합계':
+            if type(detailed_military_stats['종목']) is str:
+                cert_name = detailed_military_stats['종목']
+            if detailed_military_stats['연도'] in YEARGROUP:
+                detailed_military_stats['종목'] = cert_name
+                detailed_military_stats['연도'] = '20' + str(detailed_military_stats['연도'])
+                data = CertStats.query.filter(CertStats.name == detailed_military_stats['종목'] + '기사', CertStats.year == detailed_military_stats['연도']).first()
+                if data:
+                    data.total_taken_m = int(detailed_military_stats['응시'])
+                    data.total_passed_m = int(detailed_military_stats['합격'])
+                else:
+                    data = CertStats.query.filter(CertStats.name == detailed_military_stats['종목'] + '산업기사', CertStats.year == detailed_military_stats['연도']).first()
+                    if data:
+                        data.total_taken_m = int(detailed_military_stats['응시'])
+                        data.total_passed_m = int(detailed_military_stats['합격'])
+    db_session.commit()
+    db_session.close()
+
+def add_more_military_stats_craftsman():
+    df = pd.read_excel('excel/More_Detailed_Military_Stats.xlsx', sheet_name = '기능사')
+    NUM_ROWS = df.shape[0]
+    NUM_COLS = df.shape[1]
+    COLS = df.columns[:]
+    YEARGROUP = [18, 19, 20, 21, 22]
+    for row in range(NUM_ROWS):
+        detailed_military_stats={}
+        for col in COLS:
+            detailed_military_stats[col] = df[col][row]
+        if type(detailed_military_stats['종목']) is str:
+            cert_name = detailed_military_stats['종목']
+        if detailed_military_stats['연도'] in YEARGROUP:
+            detailed_military_stats['종목'] = cert_name
+            detailed_military_stats['연도'] = '20' + str(detailed_military_stats['연도'])
+            data = CertStats.query.filter(CertStats.name == detailed_military_stats['종목'] + '기능사', CertStats.year == detailed_military_stats['연도']).first()
+            if data:
+                data.total_taken_m = int(detailed_military_stats['응시'])
+                data.total_passed_m = int(detailed_military_stats['합격'])
+            else:
+                data = CertStats.query.filter(CertStats.name == detailed_military_stats['종목'], CertStats.year == detailed_military_stats['연도']).first()
+                if data:
+                    data.total_taken_m = int(detailed_military_stats['응시'])
+                    data.total_passed_m = int(detailed_military_stats['합격'])
+    db_session.commit()
+    db_session.close()
+
 def cert_lecture():
     df = pd.read_excel('excel/Certs_Lecture.xlsx')
     NUM_ROWS = df.shape[0]
@@ -107,7 +162,7 @@ def get_new_lists():
     # 기술사 = 01, 기능장 = 02, 기사 = 03, 기능사 = 04
     SERIESCD = ['01', '02', '03', '04']
     # 기술사 = 10, 기능장 = 20, 기사 = 30, 기능사 = 40
-    GRADECD = ['10', '20', '30', '40']
+    GRADECD = ['10', '20', '30', '31', '32', '33', '40']
     YEARCD = ['2018', '2019', '2020', '2021', '2022']
     def get_certs(seriesCD: [str]):
         cert_dict = {}
