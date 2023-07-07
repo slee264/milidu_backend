@@ -14,9 +14,12 @@ def signup():
         name = request.get_json().get('name', None)
         username = request.get_json().get('username', None)
         password = request.get_json().get('password', None)
+        major = request.get_json().get('major', None)
+        sex = request.get_json().get('sex', None)
+        birthday = request.get_json().get('birthday', None)
         
         if name and username and password:
-            user = User.signup(name, username, password)
+            user = User.signup(name, username, password, major, sex, birthday)
             
             if user:
                 return jsonify(user), 200
@@ -53,7 +56,6 @@ def login():
         return jsonify("정보를 다시 확인하세요."), 404
     return jsonify("잘못된 요청"), 500
     
-
 @app.route('/logout')
 @login_required
 def logout():

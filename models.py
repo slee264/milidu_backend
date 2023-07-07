@@ -205,15 +205,18 @@ class UniLecture(Base):
 
 class User(UserMixin, Base):
     __tablename__ = "users"
-    def __init__(self, name, username, pw):
+    def __init__(self, name, username, pw, major="", sex="", birthday=""):
         self.name = name
         self.username = username
         self.password = pw
+        self.major = major
+        self.sex = sex
+        self.birthday = birthday
 
-    def signup(name, username, password):
+    def signup(name, username, password, major, sex, birthday):
         if not User.query.filter(User.name == name).first():
             pw_hash = bcrypt.generate_password_hash(password)
-            user = User(name, username, pw_hash)
+            user = User(name, username, pw_hash, major, sex, birthday)
             db_session.add(user)
             db_session.commit()
             user = User.query.filter(User.id == user.id).first()
@@ -242,6 +245,16 @@ class User(UserMixin, Base):
 
     #유저 비밀번호
     password = Column(Text, nullable = False)
+    
+    #전공
+    major = Column(String(30), nullable = True)
+    
+    #성별
+    sex = Column(String(6), nullable = True)
+    
+    #생년월일 ex: 2000.12.20
+    birthday = Column(String(10), nullable = True)
+    
 
     def __repr__(self):
         return f'<User name = {self.name}, username = {self.username}>'

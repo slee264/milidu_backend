@@ -163,19 +163,6 @@ def schedule():
 
     return jsonify(schedule_list), 200 if schedule_list else jsonify({'message': "Certification found. '.../\
                         stats?cert_code={CERTIFICATION CODE}'"}), 404
-
-def serialize(schedule_lst):
-        if type(schedule_lst) == list:
-            result = []
-            for row in schedule_lst:
-                row_dict = row.__dict__
-                row_dict.pop('_sa_instance_state', None)
-                result.append(row_dict)
-            return result
-        else:
-            schedule = schedule_lst.__dict__
-            schedule.pop('_sa_instance_state', None)
-            return schedule
     
 @app.route('/get_unischedule', methods=['GET'])
 def get_uni():

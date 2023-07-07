@@ -313,3 +313,19 @@ def get_new_lists():
     add_more_military_stats_engineer()
     add_more_military_stats_craftsman()
     cert_lecture()
+    
+def data_checking():
+    No_Cert_Data = 0
+    No_Stats_Data = 0
+    
+    No_Cert_Data = CertStats.query.filter(CertStats.cert_id == None).count()
+
+
+    print(CertStats.query.filter(CertStats.cert_id == None).all())
+    print('No_Cert_Data :' + str(No_Cert_Data))
+    cert = Cert.query.all()
+    for data in cert:
+        if CertStats.query.filter(CertStats.name == data.name).first() is None:
+            No_Stats_Data += 1
+            print(data)
+    print('No_Stats_Data :' + str(No_Stats_Data))
