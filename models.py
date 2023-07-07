@@ -261,10 +261,10 @@ class User(UserMixin, Base):
     
 class CertReview(Base):
     __tablename__ = "cert_review"
-    def __init__(self, cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes=0):
+    def __init__(self, cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method, num_likes=0):
         
         self.cert_name = cert_name
-        self.cert_id = cert_id
+        self.cert_code = cert_code
         self.username = username
         self.time_taken = time_taken
         self.difficulty = difficulty
@@ -272,12 +272,13 @@ class CertReview(Base):
         self.num_attempts = num_attempts
         self.num_likes = num_likes
         self.content = content
+        self.study_method = study_method
         #년 월 일 시 분 초 Micro초 타임존
         self.created_at = datetime.now(timezone('UTC')).astimezone(timezone('Asia/Seoul'))
         self.updated_at = self.created_at
         
-    def create(cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes):
-        review = CertReview(cert_name, cert_id, username, time_taken, difficulty, recommend_book, num_attempts, content, num_likes)
+    def create(cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method, num_likes):
+        review = CertReview(cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method, num_likes)
         db_session.add(review)
         db_session.commit()
         
@@ -290,8 +291,8 @@ class CertReview(Base):
     def getAllReviews():
         return CertReview.query.all()
     
-    def getReviewByCertName(cert_name):
-        return CertReview.query.filter(CertReview.cert_name == cert_name).all()
+    def getReviewByCertCode(cert_code):
+        return CertReview.query.filter(CertReview.cert_code == cert_code).all()
     
     def getReviewByUsername(username):
         return CertReview.query.filter(CertReview.username == username).all()
@@ -300,7 +301,7 @@ class CertReview(Base):
     # 자격증 이름
     cert_name = Column(String(20), nullable = False)
     # 자격증 코드
-    cert_id = Column(Integer, ForeignKey('cert.id'), nullable = False)
+    cert_code = Column(String(20), nullable = False)
     # 유저 ID
     username = Column(String(20), nullable = False)
     # 리뷰 내용
@@ -315,6 +316,8 @@ class CertReview(Base):
     recommend_book = Column(String(50), nullable = True)
     #시도 횟수
     num_attempts = Column(Integer, nullable = False)
+    #공부방법
+    study_method = Column(String(50), nullable = True)
     #리뷰 쓰여진 시간+날짜
     created_at = Column(DateTime, nullable = False)
     #리뷰 업데이트 된 날짜

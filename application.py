@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 from flask_login import LoginManager
 
 
-from models import bcrypt, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview
+from models import bcrypt, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview, CertLecture
 from config import DB_SERVICE_KEY
 from __init__ import create_app
 from util import serialize
@@ -63,20 +63,22 @@ def stats():
             return jsonify({'message': "Certification not found. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
         data = CertStats.getCertStatsByCertId(cert.id)
         cert = Cert.getCertByCode(cert_code)
-        lecture = CertLecture.query.filter(CertLecture.cert_name == cert.name).all()
-        if lecture:
-            for A in lecture:
-                lecture_info = {'lecture_name': A.lecture_name, 'teacher':A.teacher, 'url': A.url}
+        info = CertLecture.query.filter(CertLecture.cert_name == cert.name).all()
+        lecture_list = []
+        if info:
+            for lecture in info:
+                lecture_info = {'lecture_name': lecture.lecture_name, 'teacher':lecture.teacher, 'url': lecture.url}
+                lecture_list.append(lecture_info)
         else:
             lecture_info = ""
         cert_info = {'name': cert.name, 'name_eng': cert.name_eng, 'ministry': cert.ministry, 'host': cert.host, 'description': cert.description}
     stats_list = []
     for stats in data:
-        val = {'name': stats.name, 'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed}
+        val = {'name': stats.name, 'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed, 'military_taken': stats.total_taken_m, 'military_passed': stats.total_passed_m}
         val['pass_rate'] = stats.total_passed * 100 / stats.total_taken if stats.total_taken is not 0 else 0
         stats_list.append(val)
             
-    return jsonify({"cert_info": cert_info, "lecture_info": lecture_info, "data": stats_list}), 200
+    return jsonify({"cert_info": cert_info, "lecture_info": lecture_list, "data": stats_list}), 200
 
 @app.route('/cert_test_schedule', methods=['POST'])
 def schedule():
@@ -172,10 +174,13 @@ def get_uni():
     
     if school_name is None:
         all_information = UniSchedule.getAllSchedules()
-        school_name_list = []
-        for school in all_information:
-            school_name_list.append(school.school_name)
-        return jsonify(school_name_list), 200
+        school_info = serialize(all_information)
+        school_list = []
+        for data in school_info:
+            school_name = data['school_name']
+            school_id = data['id']
+            school_list.append({"school_name": school_name, "school_id": school_id})
+        return jsonify(school_list), 200
 
     schedule = UniSchedule.getSchedule(school_name)
     
@@ -203,20 +208,21 @@ def get_lecture():
 def create_cert_review():
     if request.is_json:
         cert_name = request.get_json().get('cert_name', None)
-        cert_id = request.get_json().get('cert_id', None)
+        cert_code = request.get_json().get('cert_code', None)
         username = request.get_json().get('username', None)
         time_taken = request.get_json().get('time_taken', None)
         difficulty = request.get_json().get('difficulty', None)
         recommend_book = request.get_json().get('recommend_book', None)
         num_attempts = request.get_json().get('num_attempts', None)
         content = request.get_json().get('content', None)
+        study_method = request.get_json().get('study_method', None)
 
-        if (cert_name and cert_id and username and 
+        if (cert_name and cert_code and username and 
             time_taken and difficulty and 
             recommend_book and num_attempts and
-            content):
-            review = CertReview.create(cert_name, cert_id, username, time_taken, difficulty, 
-                               recommend_book, num_attempts, content, None)
+            content and study_method):
+            review = CertReview.create(cert_name, cert_code, username, time_taken, difficulty, 
+                               recommend_book, num_attempts, content, study_method, None)
         else:
             return jsonify("정보 다 입력하세요"), 404
 
@@ -224,6 +230,7 @@ def create_cert_review():
             # review.pop('_sa_instance_state', None)
             return jsonify(serialize(review)), 200
     return jsonify("잘못된 요청"), 404
+
 
 @app.route('/get_cert_review', methods=['POST'])
 def get_cert_review():
@@ -235,9 +242,28 @@ def get_cert_review():
             reviews = CertReview.getReviewByUsername(keyword)
             return jsonify(serialize(reviews)), 200
 
-        elif category == '자격증명':
-            reviews = CertReview.getReviewByCertName(keyword)
-            return jsonify(serialize(reviews)), 200
+        elif category == '자격증코드':
+            COUNT = 0
+            total_sum_difficulty = total_sum_num_attempts = total_sum_time_taken = average_difficulty = average_num_attempts = average_time_taken = 0
+            reviews = CertReview.getReviewByCertCode(keyword)
+            for data in reviews:
+                whole_time = data.time_taken
+                step1 = whole_time.split('년')
+                year = step1.pop(0)
+                step2 = step1[0].split('개월')
+                month = step2.pop(0)
+                step3 = step2[0].split('주')
+                week = step3.pop(0)
+                total_week = 52 * int(year) + 4 * int(month) + int(week)
+                COUNT += 1
+                total_sum_difficulty += data.difficulty
+                total_sum_num_attempts += data.num_attempts
+                total_sum_time_taken += total_week
+            if COUNT is not 0:
+                average_difficulty = total_sum_difficulty / COUNT
+                average_num_attempts = total_sum_num_attempts / COUNT
+                average_time_taken = total_sum_time_taken / COUNT
+            return jsonify({'ReviewList' : serialize(reviews), 'average_difficulty' : average_difficulty, 'average_num_attempts' : average_num_attempts, 'average_time_taken' : (average_time_taken - average_time_taken % 4)/4}), 200
 
         elif category is None:
             return jsonify(serialize(CertReview.getAllReviews())), 200
