@@ -187,10 +187,13 @@ def get_uni():
     
     if school_name is None:
         all_information = UniSchedule.getAllSchedules()
-        school_name_list = []
-        for school in all_information:
-            school_name_list.append(school.school_name)
-        return jsonify(school_name_list), 200
+        school_info = serialize(all_information)
+        school_list = []
+        for data in school_info:
+            school_name = data['school_name']
+            school_id = data['id']
+            school_list.append({"school_name": school_name, "school_id": school_id})
+        return jsonify(school_list), 200
 
     schedule = UniSchedule.getSchedule(school_name)
     
