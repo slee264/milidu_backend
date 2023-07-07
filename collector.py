@@ -298,7 +298,7 @@ def get_new_lists():
                 service_dict={}
                 for col in COLS:
                     service_dict[col] = df[col][row]
-                row = Cert(service_dict['name'], service_dict['name_eng'] if type(service_dict['name_eng']) is str else "", str(service_dict['code']), service_dict['ministry'], service_dict['host'], service_dict['majors'], '')
+                row = Cert(service_dict['name'], service_dict['name_eng'] if type(service_dict['name_eng']) is str else "", str(service_dict['code']), service_dict['ministry'], service_dict['host'], service_dict['majors'], service_dict['description'])
                 db_session.add(row)
             db_session.commit()
             db_session.close()
@@ -327,13 +327,3 @@ def fix_description():
             data.description = description
     db_session.commit()
     db_session.close()
-    
-def lecture_book_info():
-    df = pd.read_excel("excel/Lecture_book.xlsx")
-    NUM_ROWS = df.shape[0]
-    COLS = df.columns
-    for row in range(NUM_ROWS):
-        book_dict = {}
-        for col in COLS:
-            book_dict[col] = df[col][row]
-        print(book_dict)

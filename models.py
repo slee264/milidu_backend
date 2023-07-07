@@ -330,7 +330,7 @@ class CertReview(Base):
     
 class LectureReview(Base):
     __tablename__ = "lecture_review"
-    def __init__(self, school_name, lecture_name, lecture_id, username, content, load, grade, num_likes=0):
+    def __init__(self, school_name, lecture_name, lecture_id, username, content, load, grade, semester, rating, num_likes=0):
         self.school_name = school_name
         self.lecture_name = lecture_name
         self.lecture_id = lecture_id
@@ -339,12 +339,14 @@ class LectureReview(Base):
         self.num_likes = num_likes
         self.load = load
         self.grade = grade
+        self.semester = semester
+        self.rating = rating
         #년 월 일 시 분 초 Micro초 타임존
         self.created_at = datetime.now(timezone('UTC')).astimezone(timezone('Asia/Seoul'))
         self.updated_at = self.created_at
 
-    def create(school_name, lecture_name, lecture_id, username, content, load, grade):
-        review = LectureReview(school_name, lecture_name, lecture_id, username, content, load, grade)
+    def create(school_name, lecture_name, lecture_id, username, content, load, grade, semester, rating):
+        review = LectureReview(school_name, lecture_name, lecture_id, username, content, load, grade, semester, rating)
         db_session.add(review)
         db_session.commit()
         return LectureReview.query.filter(LectureReview.id == review.id).first()
@@ -376,6 +378,10 @@ class LectureReview(Base):
     load = Column(String(20), nullable = False)
     #학점
     grade = Column(String(10), nullable = False)
+    #학기
+    semester = Column(String(20), nullable = False)
+    #별점
+    rating = Column(Integer, nullable = False)
     #리뷰 쓰여진 시간+날짜
     created_at = Column(DateTime, nullable = False)
     #리뷰 업데이트 된 날짜

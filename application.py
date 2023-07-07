@@ -170,7 +170,7 @@ def schedule():
     # return jsonify(schedule_list), 200 if schedule_list else jsonify({'message': "Certification found. '.../\
 #                         stats?cert_code={CERTIFICATION CODE}'"}), 404
 
-@app.route('/get_unischedule', methods=['GET'])
+@app.route('/get_unischedule', methods=['POST'])
 def get_uni():
     school_name = None
     if request.is_json and request.get_json().get('school_name', None):
@@ -189,7 +189,6 @@ def get_uni():
     schedule = UniSchedule.getSchedule(school_name)
     
     if schedule:
-        print("hi")
         return jsonify(serialize(schedule)), 200
 
     schedule = UniSchedule.getSimilarSchoolSchedules(school_name)
@@ -281,13 +280,14 @@ def create_lect_review():
         lecture_id = request.get_json().get('lecture_id', None)
         username = request.get_json().get('username', None)
         content = request.get_json().get('content', None)
-        num_likes = request.get_json().get('num_likes', None)
+        semester = request.get_json().get('semester', None)
+        rating = request.get_json().get('rating', None)
         load = request.get_json().get('load', None)
         grade = request.get_json().get('grade', None)
 
         if (school_name and lecture_name and lecture_id and username and
-            content and load and grade):
-            review = LectureReview.create(school_name, lecture_name, lecture_id, username, content, load, grade)
+            content and load and grade and semester and rating):
+            review = LectureReview.create(school_name, lecture_name, lecture_id, username, content, load, grade, semester, rating)
         else:
             return jsonify("정보 불충분"), 404
         if review:
