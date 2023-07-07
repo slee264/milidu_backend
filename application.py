@@ -257,9 +257,7 @@ def get_cert_review():
 
         elif category == '자격증코드':
             COUNT = 0
-            total_sum_difficulty = 0
-            total_sum_num_attempts = 0
-            total_sum_time_taken = 0
+            total_sum_difficulty = total_sum_num_attempts = total_sum_time_taken = average_difficulty = average_num_attempts = average_time_taken = 0
             reviews = CertReview.getReviewByCertCode(keyword)
             for data in reviews:
                 whole_time = data.time_taken
@@ -278,8 +276,6 @@ def get_cert_review():
                 average_difficulty = total_sum_difficulty / COUNT
                 average_num_attempts = total_sum_num_attempts / COUNT
                 average_time_taken = total_sum_time_taken / COUNT
-            else:
-                return jsonify(serialize(reviews)), 200
             return jsonify({'ReviewList' : serialize(reviews), 'average_difficulty' : average_difficulty, 'average_num_attempts' : average_num_attempts, 'average_time_taken' : (average_time_taken - average_time_taken % 4)/4}), 200
 
         elif category is None:
