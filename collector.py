@@ -327,3 +327,13 @@ def fix_description():
             data.description = description
     db_session.commit()
     db_session.close()
+    
+def lecture_book_info():
+    df = pd.read_excel("excel/Lecture_book.xlsx")
+    NUM_ROWS = df.shape[0]
+    COLS = df.columns
+    for row in range(NUM_ROWS):
+        book_dict = {}
+        for col in COLS:
+            book_dict[col] = df[col][row]
+        print(book_dict)

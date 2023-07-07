@@ -82,8 +82,7 @@ def stats():
 
 @app.route('/cert_test_schedule', methods=['POST'])
 def schedule():
-    cert_code = request.args.get('cert_code')
-
+    cert_code = request.get_json().get('cert_code', None)
     if cert_code is not None:
         if len(cert_code) != 4:
             return jsonify({'message': "Certification code needs to be four digits. '.../schedule?cert_code={CERTIFICATION CODE}'"}), 404
@@ -163,9 +162,14 @@ def schedule():
             schedule['합격발표종료'] = ""
         schedule_list.append(schedule)
 
-    return jsonify(schedule_list), 200 if schedule_list else jsonify({'message': "Certification found. '.../\
-                        stats?cert_code={CERTIFICATION CODE}'"}), 404
-    
+    return jsonify(schedule_list), 200
+    # elif schedule_list is None:
+    #     return jsonify({'message': "Certification found. '.../stats?cert_code={CERTIFICATION CODE}'"}), 404
+
+        
+    # return jsonify(schedule_list), 200 if schedule_list else jsonify({'message': "Certification found. '.../\
+#                         stats?cert_code={CERTIFICATION CODE}'"}), 404
+
 @app.route('/get_unischedule', methods=['GET'])
 def get_uni():
     school_name = None
