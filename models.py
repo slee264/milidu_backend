@@ -355,8 +355,8 @@ class LectureReview(Base):
     def getAllReviews():
         return LectureReview.query.all()
     
-    def getReviewByCertName(lecture_name):
-        return LectureReview.query.filter(LectureReview.lecture_name == lecture_name).all()
+    def getReviewByLectID(lecture_id):
+        return LectureReview.query.filter(LectureReview.lecture_id == lecture_id).all()
     
     def getReviewByUsername(username):
         return LectureReview.query.filter(LectureReview.username == username).all()

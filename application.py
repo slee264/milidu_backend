@@ -296,7 +296,6 @@ def create_lect_review():
 
 @app.route('/get_lect_review', methods=['POST'])
 def get_lect_review():
-    print(request.is_json)
     if request.is_json:
         # "글쓴이", "강좌명". 아무것도 적지 않을시 모든 리뷰 리턴.
         category = request.get_json().get('category', None)
@@ -308,8 +307,8 @@ def get_lect_review():
             reviews = LectureReview.getReviewByUsername(keyword)
             return jsonify(serialize(reviews)), 200
 
-        if category == '강좌명':
-            reviews = LectureReview.getReviewByCertName(keyword)
+        if category == '강좌ID':
+            reviews = LectureReview.getReviewByLectID(keyword)
             return jsonify(serialize(reviews)), 200
 
     return jsonify("잘못된 요청"), 500
