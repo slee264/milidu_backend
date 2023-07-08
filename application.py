@@ -313,14 +313,7 @@ def get_lect_review():
             return jsonify(serialize(reviews)), 200
 
     return jsonify("잘못된 요청"), 500
-    
-def remove_overlapped():
-    Certlist = Cert.getAllCerts()
-    for data in Certlist:
-        for check in Certlist:
-            if data.name == check.name and data.id != check.id:
-                print(data.name)
-                
+
 from user import *
     
 if __name__ == "__main__":
