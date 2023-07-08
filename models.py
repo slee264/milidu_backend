@@ -245,23 +245,23 @@ class User(UserMixin, Base):
 
     #유저 비밀번호
     password = Column(Text, nullable = False)
-    
+
     #전공
     major = Column(String(30), nullable = True)
-    
+
     #성별
     sex = Column(String(6), nullable = True)
-    
+
     #생년월일 ex: 2000.12.20
     birthday = Column(String(10), nullable = True)
-    
+
 
     def __repr__(self):
         return f'<User name = {self.name}, username = {self.username}>'
     
 class CertReview(Base):
     __tablename__ = "cert_review"
-    def __init__(self, cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method, num_likes=0):
+    def __init__(self, cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method):
         
         self.cert_name = cert_name
         self.cert_code = cert_code
@@ -270,15 +270,14 @@ class CertReview(Base):
         self.difficulty = difficulty
         self.recommend_book = recommend_book
         self.num_attempts = num_attempts
-        self.num_likes = num_likes
         self.content = content
         self.study_method = study_method
         #년 월 일 시 분 초 Micro초 타임존
         self.created_at = datetime.now(timezone('UTC')).astimezone(timezone('Asia/Seoul'))
         self.updated_at = self.created_at
         
-    def create(cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method, num_likes):
-        review = CertReview(cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method, num_likes)
+    def create(cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method):
+        review = CertReview(cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method)
         db_session.add(review)
         db_session.commit()
         
@@ -308,8 +307,6 @@ class CertReview(Base):
     content = Column(Text, nullable = True)
     #소요 시간
     time_taken = Column(String(20), nullable = False)
-    #좋아요 수
-    num_likes = Column(Integer, nullable = True)
     #난이도
     difficulty = Column(Integer, nullable = False)
     #추천 도서
@@ -326,17 +323,16 @@ class CertReview(Base):
     def __repr__(self):
         return f'<CertReview cert_name = {self.cert_name}, username = {self.username},\
  time_taken = {self.time_taken}, difficulty = {self.difficulty}, num_attempts = {self.num_attempts}, \
- num_likes = {self.num_likes}, content = {self.content}>'
+ content = {self.content}>'
     
 class LectureReview(Base):
     __tablename__ = "lecture_review"
-    def __init__(self, school_name, lecture_name, lecture_id, username, content, load, grade, semester, rating, num_likes=0):
+    def __init__(self, school_name, lecture_name, lecture_id, username, content, load, grade, semester, rating):
         self.school_name = school_name
         self.lecture_name = lecture_name
         self.lecture_id = lecture_id
         self.username = username
         self.content = content
-        self.num_likes = num_likes
         self.load = load
         self.grade = grade
         self.semester = semester
@@ -372,8 +368,6 @@ class LectureReview(Base):
     username = Column(String(20), nullable = False)
     #리뷰 내용
     content = Column(Text, nullable = True)
-    #좋아요 수
-    num_likes = Column(Integer, nullable = True)
     #과제
     load = Column(String(20), nullable = False)
     #학점

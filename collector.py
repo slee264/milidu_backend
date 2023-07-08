@@ -122,6 +122,21 @@ def add_service_stats():
     db_session.commit()
     db_session.close()
 
+    
+def fix_description():
+    cert = Cert.query.all()
+    for data in cert:
+        description = data.description
+        # print(description)
+        step1 = description.split("}")
+        if step1:
+            description = step1[-1]
+            if description.find("&middot;") is not -1:
+                description = description.replace("&middot;",", ")
+            data.description = description
+    db_session.commit()
+    db_session.close()
+    
 def uni_schedule():
     df = pd.read_excel('excel/23.1 academic calendar.xlsx')
     NUM_ROWS = df.shape[0]
@@ -313,17 +328,5 @@ def get_new_lists():
     add_more_military_stats_engineer()
     add_more_military_stats_craftsman()
     cert_lecture()
-    
-def fix_description():
-    cert = Cert.query.all()
-    for data in cert:
-        description = data.description
-        # print(description)
-        step1 = description.split("}")
-        if step1:
-            description = step1[-1]
-            if description.find("&middot;") is not -1:
-                description = description.replace("&middot;",", ")
-            data.description = description
-    db_session.commit()
-    db_session.close()
+    fix_description()
+
