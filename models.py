@@ -214,7 +214,7 @@ class User(UserMixin, Base):
         self.birthday = birthday
 
     def signup(name, username, password, major, sex, birthday):
-        if not User.query.filter(User.name == name).first():
+        if not User.query.filter(User.name == username).first():
             pw_hash = bcrypt.generate_password_hash(password).decode('utf-8')
             user = User(name, username, pw_hash, major, sex, birthday)
             db_session.add(user)
@@ -262,7 +262,7 @@ class User(UserMixin, Base):
     
 class CertReview(Base):
     __tablename__ = "cert_review"
-    def __init__(self, cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method):
+    def __init__(self, cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method, major, sex, birthday):
         
         self.cert_name = cert_name
         self.cert_code = cert_code
@@ -273,12 +273,15 @@ class CertReview(Base):
         self.num_attempts = num_attempts
         self.content = content
         self.study_method = study_method
+        self.major = major
+        self.sex = sex
+        self.birthday = birthday
         #년 월 일 시 분 초 Micro초 타임존
         self.created_at = datetime.now(timezone('UTC')).astimezone(timezone('Asia/Seoul'))
         self.updated_at = self.created_at
         
-    def create(cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method):
-        review = CertReview(cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method)
+    def create(cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method, major, sex, birthday):
+        review = CertReview(cert_name, cert_code, username, time_taken, difficulty, recommend_book, num_attempts, content, study_method, major, sex, birthday)
         db_session.add(review)
         db_session.commit()
         
@@ -320,6 +323,12 @@ class CertReview(Base):
     created_at = Column(DateTime, nullable = False)
     #리뷰 업데이트 된 날짜
     updated_at = Column(DateTime, nullable = False)
+    #전공
+    major = Column(String(30), nullable = True)
+    #성별
+    sex = Column(String(6), nullable = True)
+    #생년월일 ex: 2000.12.20
+    birthday = Column(String(10), nullable = True)
     
     def __repr__(self):
         return f'<CertReview cert_name = {self.cert_name}, username = {self.username},\

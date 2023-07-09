@@ -219,13 +219,16 @@ def create_cert_review():
         num_attempts = request.get_json().get('num_attempts', None)
         content = request.get_json().get('content', None)
         study_method = request.get_json().get('study_method', None)
+        major = request.get_json().get('major', None)
+        sex = request.get_json().get('sex', None)
+        birthday = request.get_json().get('birthday', None)
 
         if (cert_name and cert_code and username and 
             time_taken and difficulty and 
             recommend_book and num_attempts and
             content and study_method):
             review = CertReview.create(cert_name, cert_code, username, time_taken, difficulty, 
-                               recommend_book, num_attempts, content, study_method, None)
+                               recommend_book, num_attempts, content, study_method, major, sex, birthday)
         else:
             return jsonify("정보 다 입력하세요"), 404
 

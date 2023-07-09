@@ -30,9 +30,11 @@ def signup():
 
 @app.route('/login', methods=['POST'])
 def login():
+    
     if request.is_json:
         username = request.get_json().get('username', None)
         password = request.get_json().get('password', None)
+
         def validate(username, password):
             def validate_username(username):
                 # 임시
