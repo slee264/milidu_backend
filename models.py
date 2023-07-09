@@ -215,7 +215,7 @@ class User(UserMixin, Base):
 
     def signup(name, username, password, major, sex, birthday):
         if not User.query.filter(User.name == name).first():
-            pw_hash = bcrypt.generate_password_hash(password)
+            pw_hash = bcrypt.generate_password_hash(password).decode('utf-8')
             user = User(name, username, pw_hash, major, sex, birthday)
             db_session.add(user)
             db_session.commit()
@@ -224,11 +224,12 @@ class User(UserMixin, Base):
             db_session.close()
         return None
 
+        
     def authenticate(username, password):
         user = User.query.filter(User.username == username).first()
         if user and bcrypt.check_password_hash(user.password, password):
             print("user authenticated")
-            return {"id": user.id, "name": user.name, "username": user.username}
+            return {"id": user.id, "name": user.name, "username": user.username, "major":user.major, "sex":user.sex, "birthday":user.birthday}
         return None
 
     def get(user_id):
@@ -257,7 +258,7 @@ class User(UserMixin, Base):
 
 
     def __repr__(self):
-        return f'<User name = {self.name}, username = {self.username}>'
+        return f'<ID = {self.name}, username = {self.username}>'
     
 class CertReview(Base):
     __tablename__ = "cert_review"
