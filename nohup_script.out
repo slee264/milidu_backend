@@ -1,0 +1,33 @@
+Launching subshell in virtual environment...
+Traceback (most recent call last):
+  File "/usr/local/bin/pipenv", line 8, in <module>
+    sys.exit(cli())
+  File "/usr/local/lib/python3.7/site-packages/pipenv/vendor/click/core.py", line 1130, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.7/site-packages/pipenv/cli/options.py", line 58, in main
+    return super().main(*args, **kwargs, windows_expand_args=False)
+  File "/usr/local/lib/python3.7/site-packages/pipenv/vendor/click/core.py", line 1055, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.7/site-packages/pipenv/vendor/click/core.py", line 1657, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+  File "/usr/local/lib/python3.7/site-packages/pipenv/vendor/click/core.py", line 1404, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.7/site-packages/pipenv/vendor/click/core.py", line 760, in invoke
+    return __callback(*args, **kwargs)
+  File "/usr/local/lib/python3.7/site-packages/pipenv/vendor/click/decorators.py", line 84, in new_func
+    return ctx.invoke(f, obj, *args, **kwargs)
+  File "/usr/local/lib/python3.7/site-packages/pipenv/vendor/click/core.py", line 760, in invoke
+    return __callback(*args, **kwargs)
+  File "/usr/local/lib/python3.7/site-packages/pipenv/cli/command.py", line 434, in shell
+    pypi_mirror=state.pypi_mirror,
+  File "/usr/local/lib/python3.7/site-packages/pipenv/routines/shell.py", line 46, in do_shell
+    shell.fork_compat(*fork_args)
+  File "/usr/local/lib/python3.7/site-packages/pipenv/shells.py", line 127, in fork_compat
+    c.interact(escape_character=None)
+  File "/usr/local/lib/python3.7/site-packages/pipenv/vendor/pexpect/pty_spawn.py", line 788, in interact
+    mode = tty.tcgetattr(self.STDIN_FILENO)
+termios.error: (25, 'Inappropriate ioctl for device')
+Traceback (most recent call last):
+  File "application.py", line 5, in <module>
+    from flask_login import LoginManager
+ModuleNotFoundError: No module named 'flask_login'

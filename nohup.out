@@ -1,0 +1,861 @@
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:80
+ * Running on http://172.17.0.4:80
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 949-278-084
+172.17.0.1 - - [09/Jul/2023 15:33:52] "[35m[1mGET /certs HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2552, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2532, in wsgi_app
+    response = self.handle_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2529, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/workspace/milidu_backend/application.py", line 29, in certs
+    data = Cert.getAllCerts()
+  File "/workspace/milidu_backend/models.py", line 25, in getAllCerts
+    return Cert.query.all()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2692, in all
+    return self._iter().all()  # type: ignore
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2849, in _iter
+    execution_options={"_sa_orm_load_options": self.load_options},
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2252, in execute
+    _add_event=_add_event,
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2131, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1998, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+  File "<string>", line 2, in _connection_for_bind
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1123, in _connection_for_bind
+    conn = bind.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3264, in connect
+    return self._connection_cls(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 148, in __init__
+    err, dialect, engine
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 2426, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+172.17.0.1 - - [09/Jul/2023 15:33:55] "[35m[1mPOST /get_unischedule HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2552, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2532, in wsgi_app
+    response = self.handle_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2529, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/workspace/milidu_backend/application.py", line 180, in get_uni
+    all_information = UniSchedule.getAllSchedules()
+  File "/workspace/milidu_backend/models.py", line 110, in getAllSchedules
+    return UniSchedule.query.all()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2692, in all
+    return self._iter().all()  # type: ignore
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2849, in _iter
+    execution_options={"_sa_orm_load_options": self.load_options},
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2252, in execute
+    _add_event=_add_event,
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2131, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1998, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+  File "<string>", line 2, in _connection_for_bind
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1123, in _connection_for_bind
+    conn = bind.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3264, in connect
+    return self._connection_cls(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 148, in __init__
+    err, dialect, engine
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 2426, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+172.17.0.1 - - [09/Jul/2023 15:33:55] "[35m[1mGET /certs HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2552, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2532, in wsgi_app
+    response = self.handle_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2529, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/workspace/milidu_backend/application.py", line 29, in certs
+    data = Cert.getAllCerts()
+  File "/workspace/milidu_backend/models.py", line 25, in getAllCerts
+    return Cert.query.all()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2692, in all
+    return self._iter().all()  # type: ignore
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2849, in _iter
+    execution_options={"_sa_orm_load_options": self.load_options},
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2252, in execute
+    _add_event=_add_event,
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2131, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1998, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+  File "<string>", line 2, in _connection_for_bind
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1123, in _connection_for_bind
+    conn = bind.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3264, in connect
+    return self._connection_cls(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 148, in __init__
+    err, dialect, engine
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 2426, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+ * Serving Flask app 'app'
+ * Debug mode: on
+Address already in use
+Port 80 is in use by another program. Either identify and stop that program, or start the server with a different port.
+172.17.0.1 - - [09/Jul/2023 15:36:48] "[35m[1mGET /certs HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2552, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2532, in wsgi_app
+    response = self.handle_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2529, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/workspace/milidu_backend/application.py", line 29, in certs
+    data = Cert.getAllCerts()
+  File "/workspace/milidu_backend/models.py", line 25, in getAllCerts
+    return Cert.query.all()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2692, in all
+    return self._iter().all()  # type: ignore
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2849, in _iter
+    execution_options={"_sa_orm_load_options": self.load_options},
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2252, in execute
+    _add_event=_add_event,
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2131, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1998, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+  File "<string>", line 2, in _connection_for_bind
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1123, in _connection_for_bind
+    conn = bind.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3264, in connect
+    return self._connection_cls(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 148, in __init__
+    err, dialect, engine
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 2426, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+172.17.0.1 - - [09/Jul/2023 15:36:48] "[35m[1mPOST /get_unischedule HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2552, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2532, in wsgi_app
+    response = self.handle_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2529, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/workspace/milidu_backend/application.py", line 180, in get_uni
+    all_information = UniSchedule.getAllSchedules()
+  File "/workspace/milidu_backend/models.py", line 110, in getAllSchedules
+    return UniSchedule.query.all()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2692, in all
+    return self._iter().all()  # type: ignore
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2849, in _iter
+    execution_options={"_sa_orm_load_options": self.load_options},
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2252, in execute
+    _add_event=_add_event,
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2131, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1998, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+  File "<string>", line 2, in _connection_for_bind
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1123, in _connection_for_bind
+    conn = bind.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3264, in connect
+    return self._connection_cls(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 148, in __init__
+    err, dialect, engine
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 2426, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+ * Serving Flask app 'app'
+ * Debug mode: on
+Address already in use
+Port 80 is in use by another program. Either identify and stop that program, or start the server with a different port.
+172.17.0.1 - - [09/Jul/2023 15:37:37] "[35m[1mGET /certs HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2552, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2532, in wsgi_app
+    response = self.handle_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2529, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/workspace/milidu_backend/application.py", line 29, in certs
+    data = Cert.getAllCerts()
+  File "/workspace/milidu_backend/models.py", line 25, in getAllCerts
+    return Cert.query.all()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2692, in all
+    return self._iter().all()  # type: ignore
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2849, in _iter
+    execution_options={"_sa_orm_load_options": self.load_options},
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2252, in execute
+    _add_event=_add_event,
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2131, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1998, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+  File "<string>", line 2, in _connection_for_bind
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1123, in _connection_for_bind
+    conn = bind.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3264, in connect
+    return self._connection_cls(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 148, in __init__
+    err, dialect, engine
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 2426, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+172.17.0.1 - - [09/Jul/2023 15:37:37] "[35m[1mPOST /get_unischedule HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2552, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2532, in wsgi_app
+    response = self.handle_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 2529, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/workspace/milidu_backend/application.py", line 180, in get_uni
+    all_information = UniSchedule.getAllSchedules()
+  File "/workspace/milidu_backend/models.py", line 110, in getAllSchedules
+    return UniSchedule.query.all()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2692, in all
+    return self._iter().all()  # type: ignore
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/query.py", line 2849, in _iter
+    execution_options={"_sa_orm_load_options": self.load_options},
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2252, in execute
+    _add_event=_add_event,
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2131, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1998, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+  File "<string>", line 2, in _connection_for_bind
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1123, in _connection_for_bind
+    conn = bind.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3264, in connect
+    return self._connection_cls(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 148, in __init__
+    err, dialect, engine
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 2426, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 3288, in raw_connection
+    return self.pool.connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 1267, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 716, in checkout
+    rec = pool._do_get()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 170, in _do_get
+    self._dec_overflow()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/impl.py", line 167, in _do_get
+    return self._create_connection()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 678, in __init__
+    self.__connect()
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 903, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 147, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/pool/base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 615, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/root/.local/share/virtualenvs/milidu_backend-O1RonUPm/lib/python3.7/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (::1), port 5432 failed: Cannot assign requested address
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+ * Restarting PostgreSQL 10 database server
+   ...done.
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:80
+ * Running on http://172.17.0.4:80
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 949-278-084
+172.17.0.1 - - [09/Jul/2023 15:41:01] "POST /get_unischedule HTTP/1.1" 200 -
+172.17.0.1 - - [09/Jul/2023 15:41:01] "GET /certs HTTP/1.1" 200 -
+172.17.0.1 - - [09/Jul/2023 15:41:18] "POST /get_unischedule HTTP/1.1" 200 -
+172.17.0.1 - - [09/Jul/2023 15:41:19] "GET /certs HTTP/1.1" 200 -
+172.17.0.1 - - [09/Jul/2023 15:41:21] "GET /certs HTTP/1.1" 200 -
