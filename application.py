@@ -8,7 +8,7 @@ from flask_login import LoginManager
 from models import bcrypt, Cert, CertStats, UniSchedule, UniLecture, User, CertReview, LectureReview, CertLecture
 from config import DB_SERVICE_KEY
 from __init__ import create_app
-from util import serialize
+from util import serialize, frequency_sort
 from database import db_session
 
 app = create_app()
@@ -77,8 +77,14 @@ def stats():
         val = {'name': stats.name, 'year': stats.year, 'test_taken': stats.total_taken, 'test_passed': stats.total_passed, 'military_taken': stats.total_taken_m, 'military_passed': stats.total_passed_m}
         val['pass_rate'] = stats.total_passed * 100 / stats.total_taken if stats.total_taken is not 0 else 0
         stats_list.append(val)
-            
-    return jsonify({"cert_info": cert_info, "lecture_info": lecture_list, "data": stats_list}), 200
+    review_data = CertReview.getReviewByCertCode(cert_code)
+    book_list = []
+    book_frequency_rank = []
+    if review_data:
+        for review in review_data:
+            book_list.append(review.recommend_book)
+        book_frequency_rank = frequency_sort(book_list)
+    return jsonify({"cert_info": cert_info, "lecture_info": lecture_list, "data": stats_list, "recommend_book": book_frequency_rank}), 200
 
 @app.route('/cert_test_schedule', methods=['POST'])
 def schedule():
