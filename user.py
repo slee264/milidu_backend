@@ -28,6 +28,16 @@ def signup():
         
     return jsonify("잘못된 요청"), 500
 
+@app.route('/check_username', methods=['POST'])
+def check_username():
+    if request.is_json:
+        username = request.get_json().get('username', None)
+        if User.query.filter(User.username == username).first():
+            return jsonify("중복된 아이디입니다."), 409
+        else:
+            return jsonify(username), 200
+            
+
 @app.route('/login', methods=['POST'])
 def login():
     
