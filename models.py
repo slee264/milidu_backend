@@ -314,7 +314,7 @@ class CertReview(Base):
     #난이도
     difficulty = Column(Integer, nullable = False)
     #추천 도서
-    recommend_book = Column(String(50), nullable = True)
+    recommend_book = Column(Text, nullable = True)
     #시도 횟수
     num_attempts = Column(Integer, nullable = False)
     #공부방법

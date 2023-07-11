@@ -10,6 +10,7 @@ from config import DB_SERVICE_KEY
 from __init__ import create_app
 from util import serialize, frequency_sort
 from database import db_session
+from operator import itemgetter
 
 app = create_app()
 
@@ -30,7 +31,7 @@ def certs():
     certlist = []
     #합격률, 응시자수
     for cert in data:
-        val = {'id': cert.id, 'name': cert.name, 'code': cert.code, 'majors': cert.related_majors}
+        val = {'id': cert.id, 'name': cert.name, 'code': cert.code, 'majors': cert.related_majors, 'year': 0, 'total_passed': 0, 'total_taken': 0}
         certlist.append(val)
         
     for cert in certlist:
@@ -39,8 +40,10 @@ def certs():
             cert['year'] = stat[-1].year
             cert['total_passed'] = stat[-1].total_passed
             cert['total_taken'] = stat[-1].total_taken
+    datalist = sorted(certlist, key = itemgetter('total_taken'), reverse=True)
+    print(datalist)
     
-    return jsonify(certlist), 200
+    return jsonify(datalist), 200
 
 @app.route('/cert_stats', methods=['GET'])
 def stats():
